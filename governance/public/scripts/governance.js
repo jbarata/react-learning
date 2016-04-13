@@ -14,6 +14,7 @@ var Badge = ReactBootstrap.Badge;
 var PanelGroup = ReactBootstrap.PanelGroup;
 var Panel = ReactBootstrap.Panel;
 var ResponsiveEmbed = ReactBootstrap.ResponsiveEmbed;
+var Well = ReactBootstrap.Well;
 
 
 
@@ -28,27 +29,18 @@ var GovernanceDashboard = React.createClass({
         $.getJSON("goals-search-result.json", function(json) {
             console.log(json); // this will show the info it in firebug console
 
-            var goals = []; //há-de ser um array com goals e cada um com os seus goals filhos até ao 3 nivel
-                            // [{id:123, details:{_source}, goals:[{idem mas do nivel 2}]},...]
+            var goals = [];
             json.hits.hits.forEach(function(hit){
-                var goal={};
-
-                goal.id = hit._id;
-                goal.details = hit._source;
-                goal.goals = [];
+                var goal = hit._source;
 
                 //TODO JBARATA hack temporario para por o total e o peso de cada goal
                 goal.total = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
                 goal.peso = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
 
-                if(goal["nível"]==1){
+                if(goal["nível"]=="1"){
                     goals.push(goal);
-
-                }else if(goal["nível"]==2){
-
                 }
-
-            })
+            });
 
 
             _this.setState({goals: goals});
@@ -73,7 +65,7 @@ var GovernanceDashboard = React.createClass({
               </Row>
 
               <Row className="show-grid">
-                <Col md={12} lg={12}><Goals goals={this.state.goals}/></Col>
+                <Col md={12} lg={12}><h3>Goals Nível 1</h3><Goals goals={this.state.goals}/></Col>
               </Row>
           </Grid>
       </div>
@@ -126,6 +118,9 @@ var Goals = React.createClass({
                 <Panel collapsible bsStyle={itemStyle} header={panelName}>
                     <Grid>
                         <Row>
+                          <Col md={11} lg={11}><GoalDetails goal={goal}/></Col>
+                        </Row>
+                        <Row>
                           <Col md={5} lg={5}><GoalItems items={goal.items} title="Controls"/></Col>
                           <Col md={6} lg={6}><GoalGraphics/></Col>
                         </Row>
@@ -141,6 +136,35 @@ var Goals = React.createClass({
         );
     }
 });
+
+
+var GoalDetails = React.createClass({
+    getMarkup: function(text) {
+        var rawMarkup = marked(text.toString(), {sanitize: true});
+        return { __html: rawMarkup };
+    },
+    render: function() {
+        var goal = this.props.goal;
+        var title;
+
+        return(
+            <div>
+                <h5>Departamento:</h5>
+                <Well bsSize="small">{goal.departamento}</Well>
+                <h5>Descrição:</h5>
+                <Well bsSize="small">{goal.descrição}</Well>
+                <h5>Detalhes:</h5>
+                <Panel collapsible header="...">
+                    <span dangerouslySetInnerHTML={this.getMarkup(goal.detalhe_do_goal)} />
+                </Panel>
+            </div>
+        );
+    }
+});
+
+
+
+
 
 var GoalItems = React.createClass({
 
@@ -192,23 +216,6 @@ var GoalGraphics = React.createClass({
 
 /**************** Main stuff ******************/
 
-
-
-var xxxgoals=[
-    {
-        name:"Obectivo 1",
-        peso:50,
-        percent:27,
-        items:[
-            {name:"obj1 - item1", total:"12"},
-            {name:"obj1 - item2", total:"1212"},
-            {name:"obj1 - item3", total:"1312"}
-        ]
-    },
-    {name:"Obectivo 2", percent:55, peso:35, items:[]},
-    {name:"Obectivo 3", percent:70, peso:10, items:[]},
-    {name:"Obectivo 4", percent:94, peso:5, items:[]}
-];
 
 ReactDOM.render(
     <GovernanceDashboard />
