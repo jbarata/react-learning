@@ -1,35 +1,79 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
 
-var ButtonGroup = require('react-bootstrap/lib/ButtonGroup');
-var DropdownButton = require('react-bootstrap/lib/DropdownButton');
-var MenuItem = require('react-bootstrap/lib/MenuItem');
-var Button = require('react-bootstrap/lib/Button');
-var Grid = require('react-bootstrap/lib/Grid');
-var Row = require('react-bootstrap/lib/Row');
-var Col = require('react-bootstrap/lib/Col');
-var ListGroup = require('react-bootstrap/lib/ListGroup');
-var ListGroupItem = require('react-bootstrap/lib/ListGroupItem');
-var Jumbotron = require('react-bootstrap/lib/Jumbotron');
-var Label = require('react-bootstrap/lib/Label');
-var Badge = require('react-bootstrap/lib/Badge');
-var PanelGroup = require('react-bootstrap/lib/PanelGroup');
-var Panel = require('react-bootstrap/lib/Panel');
-var ResponsiveEmbed = require('react-bootstrap/lib/ResponsiveEmbed');
+var ButtonGroup = ReactBootstrap.ButtonGroup;
+var DropdownButton = ReactBootstrap.DropdownButton;
+var MenuItem = ReactBootstrap.MenuItem;
+var Button = ReactBootstrap.Button;
+var Grid = ReactBootstrap.Grid;
+var Row = ReactBootstrap.Row;
+var Col = ReactBootstrap.Col;
+var ListGroup = ReactBootstrap.ListGroup;
+var ListGroupItem = ReactBootstrap.ListGroupItem;
+var Jumbotron = ReactBootstrap.Jumbotron;
+var Label = ReactBootstrap.Label;
+var Badge = ReactBootstrap.Badge;
+var PanelGroup = ReactBootstrap.PanelGroup;
+var Panel = ReactBootstrap.Panel;
+var ResponsiveEmbed = ReactBootstrap.ResponsiveEmbed;
+
 
 
 var GovernanceDashboard = React.createClass({
+    calculateTotalPercent: function(){
+        this.setState({totalPercent:94});
+    },
+    loadGoals: function(){
+        var _this = this;
+
+        //TODO JBARATA isto há ser uma pesquisa ES
+        $.getJSON("goals-search-result.json", function(json) {
+            console.log(json); // this will show the info it in firebug console
+
+            var goals = []; //há-de ser um array com goals e cada um com os seus goals filhos até ao 3 nivel
+                            // [{id:123, details:{_source}, goals:[{idem mas do nivel 2}]},...]
+            json.hits.hits.forEach(function(hit){
+                var goal={};
+
+                goal.id = hit._id;
+                goal.details = hit._source;
+                goal.goals = [];
+
+                //TODO JBARATA hack temporario para por o total e o peso de cada goal
+                goal.total = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
+                goal.peso = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
+
+                if(goal["nível"]==1){
+                    goals.push(goal);
+
+                }else if(goal["nível"]==2){
+
+                }
+
+            })
+
+
+            _this.setState({goals: goals});
+
+        });
+
+    },
+    getInitialState: function() {
+        return {goals: []};
+    },
+    componentDidMount: function() {
+        this.calculateTotalPercent();
+        this.loadGoals();
+    },
 
   render: function() {
     return (
       <div className="dashboard">
           <Grid>
               <Row className="show-grid">
-                <Col><MainTitle title={this.props.title} totalPercent={this.props.totalPercent}/></Col>
+                <Col><MainTitle title="Governance LIDL" totalPercent={this.state.totalPercent}/></Col>
               </Row>
 
               <Row className="show-grid">
-                <Col md={12} lg={12}><Goals goals={this.props.goals}/></Col>
+                <Col md={12} lg={12}><Goals goals={this.state.goals}/></Col>
               </Row>
           </Grid>
       </div>
@@ -51,7 +95,7 @@ var MainTitle = React.createClass({
 
         return(
             <Jumbotron>
-              <h1>Governance <Label bsStyle={labelStyle}>{this.props.totalPercent}%</Label></h1>
+              <h1>{this.props.title} <Label bsStyle={labelStyle}>{this.props.totalPercent}%</Label></h1>
             </Jumbotron>
         );
     }
@@ -69,13 +113,13 @@ var Goals = React.createClass({
         var _this = this;
 
         this.props.goals.forEach(function(goal) {
-            var itemStyle = _this.getLabelStyleFor(goal.percent);
+            var itemStyle = _this.getLabelStyleFor(goal.total);
             var panelName = (
-                <span>
-                    {goal.name}
-                    <Badge pullRight={true}>{goal.percent}%</Badge>
-                    <Badge pullRight={true}>Peso: {goal.peso}</Badge>
-                </span>
+                    <span>
+                        {goal.nome}
+                        <Badge pullRight={true}>{goal.total}%</Badge>
+                        <Badge pullRight={true}>Peso: {goal.peso}</Badge>
+                    </span>
                 );
 
             rows.push(
@@ -108,13 +152,15 @@ var GoalItems = React.createClass({
             title = (<h3> {this.props.title} </h3>);
         }
 
-        this.props.items.forEach(function(item) {
-            rows.push(
-                <ListGroupItem bsStyle="default">
-                    {item.name} <Badge pullRight={true}>{item.total}</Badge>
-                </ListGroupItem>
-            );
-        });
+        if(this.props.items){
+            this.props.items.forEach(function(item) {
+                rows.push(
+                    <ListGroupItem bsStyle="default">
+                        {item.name} <Badge pullRight={true}>{item.total}</Badge>
+                    </ListGroupItem>
+                );
+            });
+        }
 
         return(
             <div>
@@ -147,7 +193,8 @@ var GoalGraphics = React.createClass({
 /**************** Main stuff ******************/
 
 
-var goals=[
+
+var xxxgoals=[
     {
         name:"Obectivo 1",
         peso:50,
@@ -164,8 +211,5 @@ var goals=[
 ];
 
 ReactDOM.render(
-    <GovernanceDashboard
-        totalPercent={92}
-        goals={goals}
-    />
+    <GovernanceDashboard />
     , document.getElementById('root'));
