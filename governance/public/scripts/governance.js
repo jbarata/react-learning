@@ -17,60 +17,54 @@ var ResponsiveEmbed = ReactBootstrap.ResponsiveEmbed;
 var Well = ReactBootstrap.Well;
 
 
-
 var GovernanceDashboard = React.createClass({
     calculateTotalPercent: function(){
         this.setState({totalPercent:94});
     },
-    loadGoals: function(){
-        var _this = this;
-
-        //TODO JBARATA isto há ser uma pesquisa ES
-        $.getJSON("goals-search-result.json", function(json) {
-            console.log(json); // this will show the info it in firebug console
-
-            var goals = [];
-            json.hits.hits.forEach(function(hit){
-                var goal = hit._source;
-
-                //TODO JBARATA hack temporario para por o total e o peso de cada goal
-                goal.total = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
-                goal.peso = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
-
-                if(goal["nível"]=="1"){
-                    goals.push(goal);
-                }
-            });
-
-
-            _this.setState({goals: goals});
-
-        });
-
-    },
     getInitialState: function() {
-        return {goals: []};
+        return {
+            totalPercent: undefined,
+            currentLevel:1,
+            parentGoalId: undefined
+        };
     },
     componentDidMount: function() {
         this.calculateTotalPercent();
-        this.loadGoals();
+    },
+    handleGoToLevel: function(level, parentGoalId){
+        console.log("zzz",level,parentGoalId)
+        this.props.stateHistory.push(this.state);
+        this.setState( {
+            currentLevel: level,
+            parentGoalId: parentGoalId
+        } );
+    },
+    handleGoBackLevel: function(){
+        this.setState( this.props.stateHistory.pop(this.state) );
     },
 
   render: function() {
+    var backBtn;
+    if(this.state.currentLevel > 1){
+            backBtn = (<Button bsStyle="link" onClick={this.handleGoBackLevel}>Nível {this.state.currentLevel-1}</Button>);
+    }
     return (
-      <div className="dashboard">
+        <div className="dashboard">
           <Grid>
-              <Row className="show-grid">
+              <Row>
                 <Col><MainTitle title="Governance LIDL" totalPercent={this.state.totalPercent}/></Col>
               </Row>
 
-              <Row className="show-grid">
-                <Col md={12} lg={12}><h3>Goals Nível 1</h3><Goals goals={this.state.goals}/></Col>
+              <Row key={this.state.currentLevel}>  {/* esta key é o que permite fazer o re-render completo qundo se muda o currentLevel */}
+                <Col md={12} lg={12}>
+                    <h3>Goals Nível {this.state.currentLevel} {backBtn} </h3>
+                    <Goals level={this.state.currentLevel} parentGoalId={this.state.parentGoalId} onGoToLevel={this.handleGoToLevel}/>
+                </Col>
               </Row>
           </Grid>
       </div>
     );
-  }
+    }
 });
 
 var MainTitle = React.createClass({
@@ -94,6 +88,42 @@ var MainTitle = React.createClass({
 });
 
 var Goals = React.createClass({
+    loadGoals: function(level, parentGoalId){
+        var _this = this;
+
+        //TODO JBARATA isto há ser uma pesquisa ES
+        $.getJSON("goals-search-result.json", function(json) {
+            var goals = [];
+            json.hits.hits.forEach(function(hit){
+                var goal = hit._source;
+
+                //TODO JBARATA hack temporario para por o total e o peso de cada goal
+                goal.total = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
+                goal.peso = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
+
+                if(parseInt(goal["nível"],10) == level){
+                    if(level == 1 ||
+                        (level == 2 && goal["nível_1"] == parentGoalId) ||
+                        (level == 3 && goal["nível_2"] == parentGoalId) ){
+
+                        goals.push(goal);
+                    }
+                }
+            });
+
+            window.console.log(goals);
+
+            _this.setState({goals: goals});
+
+        });
+
+    },
+    getInitialState: function() {
+        return {goals: []};
+    },
+    componentDidMount: function() {
+        this.loadGoals(this.props.level, this.props.parentGoalId);
+    },
     getLabelStyleFor: function(percentage){
         if(percentage <30) return "danger";
         if(percentage <50) return "warning";
@@ -104,7 +134,7 @@ var Goals = React.createClass({
         var rows = [];
         var _this = this;
 
-        this.props.goals.forEach(function(goal) {
+        this.state.goals.forEach(function(goal) {
             var itemStyle = _this.getLabelStyleFor(goal.total);
             var panelName = (
                     <span>
@@ -115,22 +145,22 @@ var Goals = React.createClass({
                 );
 
             rows.push(
-                <Panel collapsible bsStyle={itemStyle} header={panelName}>
+                <Panel collapsible bsStyle={itemStyle} header={panelName} key={goal.id}>
                     <Grid>
                         <Row>
-                          <Col md={11} lg={11}><GoalDetails goal={goal}/></Col>
-                        </Row>
-                        <Row>
-                          <Col md={5} lg={5}><GoalItems items={goal.items} title="Controls"/></Col>
-                          <Col md={6} lg={6}><GoalGraphics/></Col>
+                          <Col md={11} lg={11}><GoalDetails goal={goal} onGoToLevel={_this.props.onGoToLevel}/></Col>
                         </Row>
                     </Grid>
                 </Panel>
             );
         });
 
+        if(rows.length == 0){
+            rows.push(<Well bsSize="small">Não há goals definidos neste nível</Well>)
+        }
+
         return(
-            <PanelGroup>
+            <PanelGroup >
               {rows}
             </PanelGroup>
         );
@@ -143,10 +173,26 @@ var GoalDetails = React.createClass({
         var rawMarkup = marked(text.toString(), {sanitize: true});
         return { __html: rawMarkup };
     },
+    goLevelClick:function(e){
+        alert(e.target.value)
+        this.props.onGoToLevel(e.target.value, this.props.goal.id);
+    },
     render: function() {
         var goal = this.props.goal;
-        var title;
 
+        var level = parseInt(goal["nível"], 10);
+        var nextLevel = (level + 1);
+        var btnNextLevel;
+
+        if(level == 1){
+            btnNextLevel = (<Button bsStyle="primary" bsSize="small" value={nextLevel.toString()} onClick={this.goLevelClick}>Goals Nível {nextLevel}</Button>);
+
+
+        }else if(level == 2){
+            btnNextLevel = (<Button bsStyle="primary" bsSize="small" value={nextLevel.toString()} onClick={this.goLevelClick}>Goals Nível 3</Button>);
+        }
+console.log('xxx',level)
+console.log('xxxyy',nextLevel)
         return(
             <div>
                 <h5>Departamento:</h5>
@@ -157,6 +203,9 @@ var GoalDetails = React.createClass({
                 <Panel collapsible header="...">
                     <span dangerouslySetInnerHTML={this.getMarkup(goal.detalhe_do_goal)} />
                 </Panel>
+
+                <br/>
+                {btnNextLevel}
             </div>
         );
     }
@@ -215,8 +264,8 @@ var GoalGraphics = React.createClass({
 
 
 /**************** Main stuff ******************/
-
+var stateHistory=[]; //array to hold the dashboard states as we navigate so we can easaly go back
 
 ReactDOM.render(
-    <GovernanceDashboard />
+    <GovernanceDashboard stateHistory={stateHistory} />
     , document.getElementById('root'));
