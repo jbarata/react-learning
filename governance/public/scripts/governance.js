@@ -32,15 +32,17 @@ var GovernanceDashboard = React.createClass({
         this.calculateTotalPercent();
     },
     handleGoToLevel: function(level, parentGoalId){
-        console.log("zzz",level,parentGoalId)
+        //save previous state for undo later on
         this.props.stateHistory.push(this.state);
+
         this.setState( {
             currentLevel: level,
             parentGoalId: parentGoalId
         } );
     },
     handleGoBackLevel: function(){
-        this.setState( this.props.stateHistory.pop(this.state) );
+        //just set previous state
+        this.setState( this.props.stateHistory.pop() );
     },
 
   render: function() {
@@ -174,7 +176,6 @@ var GoalDetails = React.createClass({
         return { __html: rawMarkup };
     },
     goLevelClick:function(e){
-        alert(e.target.value)
         this.props.onGoToLevel(e.target.value, this.props.goal.id);
     },
     render: function() {
@@ -182,17 +183,13 @@ var GoalDetails = React.createClass({
 
         var level = parseInt(goal["nível"], 10);
         var nextLevel = (level + 1);
+        var btnLabel = "Goals Nível " + nextLevel;
         var btnNextLevel;
 
-        if(level == 1){
-            btnNextLevel = (<Button bsStyle="primary" bsSize="small" value={nextLevel.toString()} onClick={this.goLevelClick}>Goals Nível {nextLevel}</Button>);
-
-
-        }else if(level == 2){
-            btnNextLevel = (<Button bsStyle="primary" bsSize="small" value={nextLevel.toString()} onClick={this.goLevelClick}>Goals Nível 3</Button>);
+        if(nextLevel > 1){
+            btnNextLevel = (<Button bsStyle="primary" bsSize="small" value={nextLevel} onClick={this.goLevelClick}>{btnLabel}</Button>);
         }
-console.log('xxx',level)
-console.log('xxxyy',nextLevel)
+
         return(
             <div>
                 <h5>Departamento:</h5>
