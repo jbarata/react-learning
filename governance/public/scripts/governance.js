@@ -135,6 +135,7 @@ var Goals = React.createClass({
     render: function() {
         var rows = [];
         var _this = this;
+        var emptyRow;
 
         this.state.goals.forEach(function(goal) {
             var itemStyle = _this.getLabelStyleFor(goal.total);
@@ -158,12 +159,13 @@ var Goals = React.createClass({
         });
 
         if(rows.length == 0){
-            rows.push(<Well bsSize="small">Não há goals definidos neste nível</Well>)
+            emptyRow = (<Well bsSize="small">Não há goals definidos neste nível</Well>);
         }
 
         return(
-            <PanelGroup >
-              {rows}
+            <PanelGroup>
+                {emptyRow}
+                {rows}
             </PanelGroup>
         );
     }
