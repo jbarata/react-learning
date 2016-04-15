@@ -2,3 +2,4 @@
 node_modules
 browser-bundle.js
 browser-bundle.js.map
+npm-debug.log
