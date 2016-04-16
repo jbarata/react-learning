@@ -1,6 +1,9 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 
+import $ from "jquery";
+var marked = require('marked');
+
 var ButtonGroup = require('react-bootstrap/lib/ButtonGroup');
 var DropdownButton = require('react-bootstrap/lib/DropdownButton');
 var MenuItem = require('react-bootstrap/lib/MenuItem');
@@ -18,6 +21,7 @@ var Panel = require('react-bootstrap/lib/Panel');
 var ResponsiveEmbed = require('react-bootstrap/lib/ResponsiveEmbed');
 var Well = require('react-bootstrap/lib/Well');
 var Fade = require('react-bootstrap/lib/Fade');
+var Alert = require('react-bootstrap/lib/Alert');
 
 
 
@@ -102,14 +106,13 @@ var MainTitle = React.createClass({
         if(percentage <90) return "primary";
         return "success";
     },
-
     render: function() {
         var labelStyle = this.getLabelStyleFor(this.props.totalPercent);
 
         return(
-            <Jumbotron>
-              <h1>{this.props.title} <Label bsStyle={labelStyle}>{this.props.totalPercent}%</Label></h1>
-            </Jumbotron>
+            <Well bsSize="large">
+              <h1>{this.props.title} <Alert className="pull-right" bsStyle={labelStyle}>{this.props.totalPercent}%</Alert></h1>
+            </Well>
         );
     }
 });
@@ -117,37 +120,6 @@ var MainTitle = React.createClass({
 var Goals = React.createClass({
     loadGoals: function(level, parentGoalId){
         var _this = this;
-
-        //TODO JBARATA isto há ser uma pesquisa ES
-/*
-        $.getJSON("goals-search-result.json", function(json) {
-            var goals = [];
-            json.hits.hits.forEach(function(hit){
-                var goal = hit._source;
-
-                //TODO JBARATA hack temporario para por o total e o peso de cada goal
-                goal.total = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
-                goal.peso = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
-
-                if(parseInt(goal["nível"],10) == level){
-                    if(level == 1 ||
-                        (level == 2 && goal["nível_1"] == parentGoalId) ||
-                        (level == 3 && goal["nível_2"] == parentGoalId) ){
-
-                        goals.push(goal);
-                    }
-                }
-            });
-
-            window.console.log(goals);
-
-            _this.setState({goals: goals});
-
-        });
-
-*/
-
-window.console.log("JNJN");
 
         $.ajax({
           url: "/recordm/recordm/definitions/search/103?q=*",
@@ -178,13 +150,45 @@ window.console.log("JNJN");
               _this.setState({goals: goals});
           }
         });
+    },
+    loadGoalsFromFile: function(level, parentGoalId){
+        var _this = this;
+
+        //TODO JBARATA isto há ser uma pesquisa ES
+
+        $.getJSON("goals-search-result.json", function(json) {
+            var goals = [];
+            json.hits.hits.forEach(function(hit){
+                var goal = hit._source;
+
+                //TODO JBARATA hack temporario para por o total e o peso de cada goal
+                goal.total = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
+                goal.peso = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
+
+                if(parseInt(goal["nível"],10) == level){
+                    if(level == 1 ||
+                        (level == 2 && goal["nível_1"] == parentGoalId) ||
+                        (level == 3 && goal["nível_2"] == parentGoalId) ){
+
+                        goals.push(goal);
+                    }
+                }
+            });
+
+            window.console.log(goals);
+
+            _this.setState({goals: goals});
+
+        });
 
     },
+
     getInitialState: function() {
         return {goals: []};
     },
     componentDidMount: function() {
         this.loadGoals(this.props.level, this.props.parentGoalId);
+        //this.loadGoalsFromFile(this.props.level, this.props.parentGoalId);
     },
     getLabelStyleFor: function(percentage){
         if(percentage <30) return "danger";
@@ -209,16 +213,10 @@ window.console.log("JNJN");
 
             rows.push(
                 <Panel collapsible bsStyle={itemStyle} header={panelName} key={goal.id}>
-                    <Grid>
-                        <Row>
-                            <Col md={11} lg={11}>
-                                <GoalDetails goal={goal}
-                                            onGoToLevel={_this.props.onGoToLevel}
-                                            onShowControls={_this.props.onShowControls}
-                                            />
-                            </Col>
-                        </Row>
-                    </Grid>
+                    <GoalDetails goal={goal}
+                                onGoToLevel={_this.props.onGoToLevel}
+                                onShowControls={_this.props.onShowControls}
+                                />
                 </Panel>
             );
         });
@@ -418,5 +416,5 @@ var stateHistory=[]; //array to hold the dashboard states as we navigate so we c
 
 ReactDOM.render(
     <GovernanceDashboard stateHistory={stateHistory} />
-    , document.getElementById('root')
+    , document.getElementById('governance-dashboard-container')
 );

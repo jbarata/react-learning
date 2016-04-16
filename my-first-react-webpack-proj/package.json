@@ -4,13 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack --progress --colors --watch",
-    "start-web": "webpack-dev-server",
+    "xxstartxx": "webpack --progress --colors --watch",
+    "start": "webpack-dev-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "BSD-2-Clause",
   "dependencies": {
+    "marked": "^0.3.5",
     "react": "^0.14.5",
     "react-bootstrap": "^0.28.5",
     "react-dom": "^0.14.5"
@@ -20,6 +21,8 @@
     "babel-loader": "^6.2.0",
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.3.13",
+    "css-loader": "^0.23.1",
+    "jquery": "^2.2.3",
     "webpack": "^1.12.9",
     "webpack-dev-server": "^1.14.1"
   }
