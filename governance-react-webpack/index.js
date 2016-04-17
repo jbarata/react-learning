@@ -4,23 +4,15 @@ var ReactDOM = require('react-dom');
 import $ from "jquery";
 var marked = require('marked');
 
-var ButtonGroup = require('react-bootstrap/lib/ButtonGroup');
-var DropdownButton = require('react-bootstrap/lib/DropdownButton');
-var MenuItem = require('react-bootstrap/lib/MenuItem');
+var ButtonToolbar = require('react-bootstrap/lib/ButtonToolbar');
 var Button = require('react-bootstrap/lib/Button');
 var Grid = require('react-bootstrap/lib/Grid');
 var Row = require('react-bootstrap/lib/Row');
 var Col = require('react-bootstrap/lib/Col');
-var ListGroup = require('react-bootstrap/lib/ListGroup');
-var ListGroupItem = require('react-bootstrap/lib/ListGroupItem');
-var Jumbotron = require('react-bootstrap/lib/Jumbotron');
-var Label = require('react-bootstrap/lib/Label');
 var Badge = require('react-bootstrap/lib/Badge');
 var PanelGroup = require('react-bootstrap/lib/PanelGroup');
 var Panel = require('react-bootstrap/lib/Panel');
-var ResponsiveEmbed = require('react-bootstrap/lib/ResponsiveEmbed');
 var Well = require('react-bootstrap/lib/Well');
-var Fade = require('react-bootstrap/lib/Fade');
 var Alert = require('react-bootstrap/lib/Alert');
 
 
@@ -34,7 +26,8 @@ var GovernanceDashboard = React.createClass({
             totalPercent: undefined,
             currentLevel:1,
             parentGoalId: undefined,
-            showControls:false
+            showControls:false,
+            currentGoal:undefined
         };
     },
     componentDidMount: function() {
@@ -47,18 +40,24 @@ var GovernanceDashboard = React.createClass({
         this.setState( {
             currentLevel: level,
             parentGoalId: parentGoalId,
-            showControls: false
+            showControls: false,
+            currentGoal:undefined
         } );
     },
     handleGoBackLevel: function(){
         //just set previous state
         this.setState( this.props.stateHistory.pop() );
+        this.setState( {
+            showControls:false,
+            currentGoal:undefined
+        } );
     },
 
-    handleShowControls: function(){
+    handleShowControls: function(goal){
 
         this.setState( {
-            showControls:true
+            showControls:true,
+            currentGoal:goal
         } );
     },
 
@@ -70,7 +69,7 @@ var GovernanceDashboard = React.createClass({
         }
 
         if(this.state.showControls){
-            controlsComponent = ( <GoalControls /> );
+            controlsComponent = ( <GoalControls goal={this.state.currentGoal} key={this.state.currentGoal.id}/> );
         }
 
         return (
@@ -187,8 +186,8 @@ var Goals = React.createClass({
         return {goals: []};
     },
     componentDidMount: function() {
-        this.loadGoals(this.props.level, this.props.parentGoalId);
-        //this.loadGoalsFromFile(this.props.level, this.props.parentGoalId);
+        //this.loadGoals(this.props.level, this.props.parentGoalId);
+        this.loadGoalsFromFile(this.props.level, this.props.parentGoalId);
     },
     getLabelStyleFor: function(percentage){
         if(percentage <30) return "danger";
@@ -244,7 +243,7 @@ var GoalDetails = React.createClass({
         this.props.onGoToLevel(e.target.value, this.props.goal.id);
     },
     showControlsClick:function(e){
-        this.props.onShowControls(this.props.goal.id);
+        this.props.onShowControls(this.props.goal);
     },
     render: function() {
         var goal = this.props.goal;
@@ -273,8 +272,10 @@ var GoalDetails = React.createClass({
                 </Panel>
 
                 <br/>
-                {btnNextLevel}
-                {btnShowControls}
+                <ButtonToolbar>
+                    {btnNextLevel}
+                    {btnShowControls}
+                </ButtonToolbar>
             </div>
         );
     }
@@ -283,11 +284,39 @@ var GoalDetails = React.createClass({
 
 
 var GoalControls = React.createClass({
+
     loadControls: function(goalId){
         var _this = this;
 
+        $.ajax({
+          url: "/recordm/recordm/definitions/search/96?q=goal.raw:"+goalId,
+          xhrFields: { withCredentials: true },
+          dataType: 'json',
+          cache: false,
+          success: function(json) {
+              var controls = [];
+              json.hits.hits.forEach(function(hit){
+                  var control = hit._source;
+
+                  //TODO JBARATA hack temporario para por o peso de cada control
+                  control.peso = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
+
+                  controls.push(control);
+
+              });
+
+              window.console.log(controls);
+
+              _this.setState({controls: controls});
+          }
+        });
+
+    },
+    loadControlsFromFile: function(goalId){
+        var _this = this;
+
         //TODO JBARATA isto há ser uma pesquisa ES
-        $.getJSON("controls-search-result.json", function(json) {
+        $.getJSON("controls-search-results.json", function(json) {
             var controls = [];
             json.hits.hits.forEach(function(hit){
                 var control = hit._source;
@@ -296,12 +325,12 @@ var GoalControls = React.createClass({
 
                 control.peso = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
 
-                if(parseInt(control["goal"],10) == goalId){
-                    controls.push(goal);
+                if(parseInt(control["goal"][0],10) == goalId){
+                    controls.push(control);
                 }
             });
 
-            window.console.log(controls);
+            window.console.log('xxx',controls);
 
             _this.setState({controls: controls});
 
@@ -312,7 +341,8 @@ var GoalControls = React.createClass({
         return {controls: []};
     },
     componentDidMount: function() {
-        this.loadControls(this.props.goalId);
+        //this.loadControls(this.props.goal.id);
+        this.loadControlsFromFile(this.props.goal.id);
     },
 
     render: function() {
@@ -330,11 +360,7 @@ var GoalControls = React.createClass({
 
             rows.push(
                 <Panel collapsible header={panelName} key={control.id}>
-                    <Grid>
-                        <Row>
-                          <Col md={11} lg={11}>{/*<ControlDetails control={control} /> */}</Col>
-                        </Row>
-                    </Grid>
+                    <ControlDetails control={control} />
                 </Panel>
             );
         });
@@ -343,15 +369,19 @@ var GoalControls = React.createClass({
             emptyRow = (<Well bsSize="small">Não há Controls definidos para este Goal</Well>);
         }
 
+        var ControlsHeader = (<h1>Controls do Goal - <em>{this.props.goal.nome}</em></h1>);
+
         return(
+
             <Grid>
                 <Row>
-                  <Col md={12} lg={12}>
-                      <h3>Goal -  XPTO </h3>
-                      <PanelGroup>
-                          {emptyRow}
-                          {rows}
-                      </PanelGroup>
+                  <Col md={11} lg={11}>
+                      <Panel header={ControlsHeader}>
+                          <PanelGroup>
+                              {emptyRow}
+                              {rows}
+                          </PanelGroup>
+                      </Panel>
                   </Col>
                 </Row>
             </Grid>
@@ -362,7 +392,34 @@ var GoalControls = React.createClass({
 });
 
 
+var ControlDetails = React.createClass({
+    getMarkup: function(text) {
+        var rawMarkup = marked(text.toString(), {sanitize: true});
+        return { __html: rawMarkup };
+    },
+    render: function() {
+        var control = this.props.control;
 
+        return(
+            <div>
+                <h5>Origem:</h5>
+                <Well bsSize="small">{control["origem"]}</Well>
+                <h5>Severidade:</h5>
+                <Well bsSize="small">{control["severidade"]}</Well>
+                <h5>Responsável:</h5>
+                <Well bsSize="small">{control["nome_responsável"]}</Well>
+
+                <h5>Descrição:</h5>
+                <Panel collapsible header="...">
+                    <span dangerouslySetInnerHTML={this.getMarkup(control["descrição"])} />
+                </Panel>
+
+            </div>
+        );
+    }
+});
+
+{/*
 var GoalItems = React.createClass({
 
     render: function() {
@@ -409,7 +466,7 @@ var GoalGraphics = React.createClass({
     }
 });
 
-
+*/}
 
 /**************** Main stuff ******************/
 var stateHistory=[]; //array to hold the dashboard states as we navigate so we can easaly go back
