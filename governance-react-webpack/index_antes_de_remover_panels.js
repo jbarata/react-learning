@@ -3,7 +3,6 @@ var ReactDOM = require('react-dom');
 
 import $ from "jquery";
 var marked = require('marked');
-import { Sparklines, SparklinesLine } from 'react-sparklines';
 
 var ButtonToolbar = require('react-bootstrap/lib/ButtonToolbar');
 var Button = require('react-bootstrap/lib/Button');
@@ -15,7 +14,6 @@ var PanelGroup = require('react-bootstrap/lib/PanelGroup');
 var Panel = require('react-bootstrap/lib/Panel');
 var Well = require('react-bootstrap/lib/Well');
 var Alert = require('react-bootstrap/lib/Alert');
-var Label = require('react-bootstrap/lib/Label');
 
 
 
@@ -75,53 +73,45 @@ var GovernanceDashboard = React.createClass({
         }
 
         return (
+            <div className="dashboard">
+              <Grid>
+                  <Row>
+                    <Col><MainTitle title="Governance LIDL" totalPercent={this.state.totalPercent}/></Col>
+                  </Row>
 
-                <Well bsSize="large" style={{"margin":"10px 40px"}}>
-                  <Grid>
-                      <Row>
-                        <Col><MainTitle title="Governance" totalPercent={this.state.totalPercent}/></Col>
-                      </Row>
+                  <Row key={this.state.currentLevel}>  {/* esta key é o que permite fazer o re-render completo qundo se muda o currentLevel */}
+                    <Col md={12} lg={12}>
+                        <h3>Goals Nível {this.state.currentLevel} {backBtn} </h3>
+                        <Goals  level={this.state.currentLevel}
+                                parentGoalId={this.state.parentGoalId}
+                                onGoToLevel={this.handleGoToLevel}
+                                onShowControls={this.handleShowControls}
+                        />
+                    </Col>
+                  </Row>
+              </Grid>
 
-                      <Row key={this.state.currentLevel}>  {/* esta key é o que permite fazer o re-render completo qundo se muda o currentLevel */}
-                        <Col md={12} lg={12}>
-                            <h3>Goals Nível {this.state.currentLevel} {backBtn} </h3>
-                            <Goals  level={this.state.currentLevel}
-                                    parentGoalId={this.state.parentGoalId}
-                                    onGoToLevel={this.handleGoToLevel}
-                                    onShowControls={this.handleShowControls}
-                            />
-                        </Col>
-                      </Row>
-                  </Grid>
-
-                  <Grid>
-                      <Row>
-                          <Col>
-                            .....DETALHESSSS....
-                          </Col>
-                      </Row>
-                  </Grid>
-
-                  {controlsComponent}
-              </Well>
-
+              {controlsComponent}
+          </div>
         );
     }
 });
 
 var MainTitle = React.createClass({
+    getLabelStyleFor: function(percentage){
+        if(percentage <30) return "danger";
+        if(percentage <50) return "warning";
+        if(percentage <70) return "default";
+        if(percentage <90) return "primary";
+        return "success";
+    },
     render: function() {
-        var goalEvolutionData = [5, 10, 5, 20, 8, 15, 5, 10, 5, 20, 8, 15];
+        var labelStyle = this.getLabelStyleFor(this.props.totalPercent);
+
         return(
-            <div>
-                  <h1 style={{"display": "inline-block"}} >{this.props.title}</h1>
-                  <div style={{"float": "right"}} >
-                      <Sparklines data={goalEvolutionData} limit={15} width={100} height={50} margin={5}>
-                          <SparklinesLine />
-                      </Sparklines>
-                      <h1 style={{"display": "inline-block", "vertical-align": "top"}}>{this.props.totalPercent}%</h1>
-                  </div>
-            </div>
+            <Well bsSize="large">
+              <h1>{this.props.title} <Alert className="pull-right" bsStyle={labelStyle}>{this.props.totalPercent}%</Alert></h1>
+            </Well>
         );
     }
 });
@@ -191,23 +181,13 @@ var Goals = React.createClass({
         });
 
     },
-    loadSparklineData: function(){
-        //TODO implementar pesquisa e fazer um set state com os da
-
-        this.setState({goalEvolutionData: [5, 10, 5, 20, 8, 15, 5, 10, 5, 20, 8, 15]});
-
-    },
 
     getInitialState: function() {
-        return {
-            goals: [],
-            goalEvolutionData:[]
-        };
+        return {goals: []};
     },
     componentDidMount: function() {
         //this.loadGoals(this.props.level, this.props.parentGoalId);
         this.loadGoalsFromFile(this.props.level, this.props.parentGoalId);
-        this.loadSparklineData();
     },
     getLabelStyleFor: function(percentage){
         if(percentage <30) return "danger";
@@ -222,41 +202,20 @@ var Goals = React.createClass({
 
         this.state.goals.forEach(function(goal) {
             var itemStyle = _this.getLabelStyleFor(goal.total);
+            var panelName = (
+                    <span>
+                        {goal.nome}
+                        <Badge pullRight={true}>{goal.total}%</Badge>
+                        <Badge pullRight={true}>Peso: {goal.peso}</Badge>
+                    </span>
+                );
 
             rows.push(
-                <Panel  key={goal.id}>
-
-                <span>{goal.nome}
-
-
-                </span>
-
-
-                <div style={{"float": "right"}} >
-
-                <Button bsStyle="link" bsSize="small">NIVEL 2</Button>
-                <Button bsStyle="link" bsSize="small">DETALHES</Button>
-                    <Sparklines data={_this.state.goalEvolutionData} limit={15} width={100} height={20} margin={5}>
-                        <SparklinesLine />
-                    </Sparklines>
-
-                    <Badge>{goal.total}%</Badge>
-                    <Badge>Peso: {goal.peso}</Badge>
-
-
-                </div>
-
-
-
-
-
-{/*
-    <GoalDetails goal={goal}
-                onGoToLevel={_this.props.onGoToLevel}
-                onShowControls={_this.props.onShowControls}
-                />
-
-*/}
+                <Panel collapsible bsStyle={itemStyle} header={panelName} key={goal.id}>
+                    <GoalDetails goal={goal}
+                                onGoToLevel={_this.props.onGoToLevel}
+                                onShowControls={_this.props.onShowControls}
+                                />
                 </Panel>
             );
         });
