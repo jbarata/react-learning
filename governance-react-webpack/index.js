@@ -28,8 +28,8 @@ var GovernanceDashboard = React.createClass({
             totalPercent: undefined,
             currentLevel:1,
             parentGoalId: undefined,
-            showControls:false,
-            currentGoal:undefined
+            currentGoal:undefined,
+            showGoalDetails:false
         };
     },
     componentDidMount: function() {
@@ -42,41 +42,55 @@ var GovernanceDashboard = React.createClass({
         this.setState( {
             currentLevel: level,
             parentGoalId: parentGoal.id,
-            showControls: false,
-            currentGoal: parentGoal
+            currentGoal: parentGoal,
+            showGoalDetails:false
         } );
     },
     handleGoBackLevel: function(){
         //just set previous state
         this.setState( this.props.stateHistory.pop() );
         this.setState( {
-            showControls:false
+            showGoalDetails:false
 
         } );
     },
-
-    handleShowControls: function(goal){
+    handleShowGoalDetails: function(){
 
         this.setState( {
-            showControls:true,
-            currentGoal:goal
+            showGoalDetails:true
+        } );
+    },
+    handleHideGoalDetails: function(){
+
+        this.setState( {
+            showGoalDetails:false
         } );
     },
 
     render: function() {
         var controlsComponent;
         var backBtn;
+        var goals;
         var goalDetails;
         if(this.state.currentLevel > 1){
-            backBtn = (<Button bsStyle="link" onClick={this.handleGoBackLevel}>Voltar ao Nível {this.state.currentLevel-1}</Button>);
+            backBtn = (<Button bsStyle="link" onClick={this.handleGoBackLevel}>
+                            <i className="icon-level-up" style={{"vertical-align": "middle"}}></i>
+                       </Button>);
         }
 
-        if(this.state.showControls){
+        if(this.state.currentLevel < 4){
+            goals =(<Goals  level={this.state.currentLevel}
+                            parentGoalId={this.state.parentGoalId}
+                            onGoToLevel={this.handleGoToLevel}
+                    />);
+        }
+
+        if(this.state.currentGoal && this.state.showGoalDetails){
+            goalDetails = (<GoalDetails goal={this.state.currentGoal} onHideGoalDetails={this.handleHideGoalDetails} />)
+        }
+
+        if(this.state.currentLevel >3 ){
             controlsComponent = ( <GoalControls goal={this.state.currentGoal} key={this.state.currentGoal.id}/> );
-        }
-
-        if(this.state.currentGoal){
-            goalDetails = (<GoalDetails goal={this.state.currentGoal} />)
         }
 
         return (
@@ -89,6 +103,7 @@ var GovernanceDashboard = React.createClass({
                                 currentLevel={this.state.currentLevel}
                                 currentGoal={this.state.currentGoal}
                                 totalPercent={this.state.totalPercent}
+                                onShowGoalDetails={this.handleShowGoalDetails}
                              />
 
                             </Col>
@@ -97,12 +112,16 @@ var GovernanceDashboard = React.createClass({
                       <Row key={this.state.currentLevel}>  {/* esta key é o que permite fazer o re-render completo qundo se muda o currentLevel */}
                         <Col md={12} lg={12}>
                             <h2>{backBtn}</h2>
-                            <Goals  level={this.state.currentLevel}
-                                    parentGoalId={this.state.parentGoalId}
-                                    onGoToLevel={this.handleGoToLevel}
-                                    onShowControls={this.handleShowControls}
-                            />
+                            {goals}
                         </Col>
+                      </Row>
+                  </Grid>
+
+                  <Grid>
+                      <Row key={this.state.parentGoalId}>
+                          <Col  md={12} lg={12}>
+                              {controlsComponent}
+                          </Col>
                       </Row>
                   </Grid>
 
@@ -114,7 +133,9 @@ var GovernanceDashboard = React.createClass({
                       </Row>
                   </Grid>
 
-                  {controlsComponent}
+
+
+
               </Well>
 
         );
@@ -125,20 +146,26 @@ var MainTitle = React.createClass({
     render: function() {
         var goalEvolutionData = [5, 10, 5, 20, 8, 15, 5, 10, 5, 20, 8, 15];
         var title = "Governance";
+        var showDetailsBtn;
 
         if(this.props.currentLevel > 1){
             title = this.props.currentGoal.nome;
+            showDetailsBtn = (<Button bsStyle="link" onClick={this.props.onShowGoalDetails}>
+                                    <i className="icon-question-sign" style={{"vertical-align": "middle"}}></i>
+                             </Button>);
         }
 
         return(
             <div>
-                  <h1 style={{"display": "inline-block"}} >{title}</h1>
-                  <div style={{"float": "right"}} >
-                      <Sparklines data={goalEvolutionData} limit={15} width={100} height={50} margin={5}>
-                          <SparklinesLine />
-                      </Sparklines>
-                      <h1 style={{"display": "inline-block", "vertical-align": "top"}}>{this.props.totalPercent}%</h1>
-                  </div>
+                <h1 style={{"display": "inline-block"}} >{title}</h1>
+                {showDetailsBtn}
+
+                <div style={{"float": "right"}} >
+                    <Sparklines data={goalEvolutionData} limit={15} width={100} height={50} margin={5}>
+                      <SparklinesLine />
+                    </Sparklines>
+                    <h1 style={{"display": "inline-block", "vertical-align": "top"}}>{this.props.totalPercent}%</h1>
+                </div>
             </div>
         );
     }
@@ -161,6 +188,7 @@ var Goals = React.createClass({
                   //TODO JBARATA hack temporario para por o total e o peso de cada goal
                   goal.total = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
                   goal.peso = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
+                  goal.delta = Math.floor(Math.random() * 200) -100 ; //TODO JBARATA implementar
 
                   if(parseInt(goal["nível"],10) == level){
                       if(level == 1 ||
@@ -191,6 +219,7 @@ var Goals = React.createClass({
                 //TODO JBARATA hack temporario para por o total e o peso de cada goal
                 goal.total = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
                 goal.peso = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
+                goal.delta = Math.floor(Math.random() * 200) -100 ; //TODO JBARATA implementar
 
                 if(parseInt(goal["nível"],10) == level){
                     if(level == 1 ||
@@ -236,33 +265,28 @@ var Goals = React.createClass({
         var emptyRow;
 
         this.state.goals.forEach(function(goal) {
-            var btnNextLevel;
-
-            if(_this.props.level < 3){
-                btnNextLevel = (<Button bsStyle="link" bsSize="large"
-                                        onClick={ () => _this.goLevelClick(goal) }
-                                        style={{"font-size":"1.2em"}}>
-                                    {goal.nome}
-                                </Button>);
-            }else{
-                btnNextLevel = (<span style={{"font-size":"1.2em"}}>
-                                    {goal.nome}
-                                </span>);
+            var delta =(<span>(=)</span>);
+            if(goal.delta < 0){
+                delta = (<span style={{"color":"red"}}>({goal.delta}%)</span>);
+            }else if (goal.delta > 0){
+                delta = (<span>(+ {goal.delta}%)</span>);
             }
 
             rows.push(
                 <Panel  key={goal.id}>
-                    <span>
-                        {btnNextLevel}
-                    </span>
+                    <Button bsStyle="link" bsSize="large" style={{"font-size":"1.2em"}}
+                            onClick={ () => _this.goLevelClick(goal) }>
+                        {goal.nome}
+                    </Button>
 
                     <div style={{"float": "right"}} >
                         <Sparklines data={_this.state.goalEvolutionData} limit={15} width={100} height={20} margin={5}>
                             <SparklinesLine />
                         </Sparklines>
 
-                        <Badge>{goal.total}%</Badge>
-                        <Badge>Peso: {goal.peso}</Badge>
+                        {delta}
+                        <span>&nbsp;(Peso: {goal.peso})</span>
+                        <span style={{"font-weight":"bold","font-size": "1.3em"}}>&nbsp;{goal.total}%</span>
                     </div>
 
                 </Panel>
@@ -288,22 +312,21 @@ var GoalDetails = React.createClass({
         var rawMarkup = marked(text.toString(), {sanitize: true});
         return { __html: rawMarkup };
     },
-//    showControlsClick:function(e){
-//        this.props.onShowControls(this.props.goal);
-//    },
+
     render: function() {
         var goal = this.props.goal;
+        var details;
 
-        //var btnShowControls;
-
-
-        //btnShowControls = (<Button bsStyle="primary" bsSize="small" onClick={this.showControlsClick}>Controls</Button>);
+        if(!goal.detalhe_do_goal || !goal.detalhe_do_goal[0]){
+            details = (<span>Este Goal não tem detalhes ...</span>);
+        }else{
+            details = (<span dangerouslySetInnerHTML={this.getMarkup(goal.detalhe_do_goal)} />);
+        }
 
         return(
-            <Panel collapsible header="Detalhes ...">
-                <span dangerouslySetInnerHTML={this.getMarkup(goal.detalhe_do_goal)} />
-            </Panel>
-
+            <Alert onDismiss={this.props.onHideGoalDetails} closeLabel="" style={{"color":"black", "background-color":"#fff","border-color":"#ddd"}}>
+                {details}
+            </Alert>
         );
     }
 });

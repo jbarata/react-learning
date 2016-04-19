@@ -1,5 +1,5 @@
 {
-  "took": 4,
+  "took": 6,
   "timed_out": false,
   "_shards": {
     "total": 5,
@@ -7,9 +7,107 @@
     "failed": 0
   },
   "hits": {
-    "total": 8,
+    "total": 9,
     "max_score": null,
     "hits": [
+      {
+        "_index": "recordm-103",
+        "_type": "recordm-103",
+        "_id": "27833",
+        "_score": null,
+        "_source": {
+          "id": 27833,
+          "instanceId": 27833,
+          "version": 0,
+          "definitionId": 103,
+          "definitionName": "Goal",
+          "nome": [
+            "Todos os PINPADs com IP definido"
+          ],
+          "departamento": [
+            "IT"
+          ],
+          "detalhe_do_goal": [
+            "Todos os PINPADs devem ter um IP associado"
+          ],
+          "anexo": [],
+          "nível": [
+            "3"
+          ],
+          "nível_1": [],
+          "nível_2": [
+            "10004"
+          ],
+          "descrição": [
+            "Todos os PINPADs devem ter um IP associado"
+          ],
+          "controls": [
+            "/recordm/index.html#/definitions/96/q=goal:27833"
+          ],
+          "ver_goal_nível_1": [],
+          "ver_goal_nível_2": [
+            "/recordm/index.html#/definitions/103/q=instanceId:10004"
+          ],
+          "goal_nível_1": [],
+          "goal_nível_2": [
+            "10004"
+          ],
+          "peso": [
+            "50"
+          ],
+          "peso_goal_nível_1": [
+            "10"
+          ],
+          "peso_goal_nível_2": [
+            "20"
+          ],
+          "nível_1_reference": [],
+          "nível_2_reference": [
+            "Inventário de PinPads"
+          ],
+          "_definitionInfo": {
+            "id": 103,
+            "name": "Goal",
+            "instanceLabel": [
+              {
+                "id": 1190,
+                "name": "Nome",
+                "description": "$instanceLabel"
+              }
+            ],
+            "instanceDescription": [
+              {
+                "id": 1191,
+                "name": "Departamento",
+                "description": "$[IT,Facilities] $instanceDescription"
+              },
+              {
+                "id": 1195,
+                "name": "Nível",
+                "description": "$[*1,2,3] $instanceDescription"
+              },
+              {
+                "id": 1689,
+                "name": "Peso",
+                "description": "$number $instanceDescription Peso que este Goal tem no atingimento do Goal acima"
+              },
+              {
+                "id": 1198,
+                "name": "Descrição",
+                "description": "$text $instanceDescription"
+              }
+            ]
+          },
+          "_links": {
+            "update": "recordm/instances/27833",
+            "delete": "recordm/instances/27833",
+            "size": "2"
+          }
+        },
+        "sort": [
+          27833
+        ]
+      },
       {
         "_index": "recordm-103",
         "_type": "recordm-103",
@@ -72,6 +170,11 @@
                 "id": 1195,
                 "name": "Nível",
                 "description": "$[*1,2,3] $instanceDescription"
+              },
+              {
+                "id": 1689,
+                "name": "Peso",
+                "description": "$number $instanceDescription Peso que este Goal tem no atingimento do Goal acima"
               },
               {
                 "id": 1198,
@@ -154,6 +257,11 @@
                 "description": "$[*1,2,3] $instanceDescription"
               },
               {
+                "id": 1689,
+                "name": "Peso",
+                "description": "$number $instanceDescription Peso que este Goal tem no atingimento do Goal acima"
+              },
+              {
                 "id": 1198,
                 "name": "Descrição",
                 "description": "$text $instanceDescription"
@@ -232,6 +340,11 @@
                 "id": 1195,
                 "name": "Nível",
                 "description": "$[*1,2,3] $instanceDescription"
+              },
+              {
+                "id": 1689,
+                "name": "Peso",
+                "description": "$number $instanceDescription Peso que este Goal tem no atingimento do Goal acima"
               },
               {
                 "id": 1198,
@@ -314,6 +427,11 @@
                 "description": "$[*1,2,3] $instanceDescription"
               },
               {
+                "id": 1689,
+                "name": "Peso",
+                "description": "$number $instanceDescription Peso que este Goal tem no atingimento do Goal acima"
+              },
+              {
                 "id": 1198,
                 "name": "Descrição",
                 "description": "$text $instanceDescription"
@@ -347,7 +465,7 @@
           "departamento": [
             "IT"
           ],
-          "detalhe_do_goal": ["## Detalhes..\n\nRendered by **marked**."],
+          "detalhe_do_goal": [],
           "anexo": [],
           "nível": [
             "1"
@@ -384,6 +502,11 @@
                 "id": 1195,
                 "name": "Nível",
                 "description": "$[*1,2,3] $instanceDescription"
+              },
+              {
+                "id": 1689,
+                "name": "Peso",
+                "description": "$number $instanceDescription Peso que este Goal tem no atingimento do Goal acima"
               },
               {
                 "id": 1198,
@@ -456,6 +579,11 @@
                 "description": "$[*1,2,3] $instanceDescription"
               },
               {
+                "id": 1689,
+                "name": "Peso",
+                "description": "$number $instanceDescription Peso que este Goal tem no atingimento do Goal acima"
+              },
+              {
                 "id": 1198,
                 "name": "Descrição",
                 "description": "$text $instanceDescription"
@@ -480,7 +608,7 @@
         "_source": {
           "id": 10004,
           "instanceId": 10004,
-          "version": 0,
+          "version": 2,
           "definitionId": 103,
           "definitionName": "Goal",
           "nome": [
@@ -507,6 +635,24 @@
             "Inventário de Equipamentos"
           ],
           "nível_2_reference": [],
+          "peso_goal_nível_2": [],
+          "peso_goal_nível_1": [
+            "10"
+          ],
+          "peso": [
+            "20"
+          ],
+          "controls": [
+            "/recordm/index.html#/definitions/96/q=goal:10004"
+          ],
+          "goal_nível_1": [
+            "10001"
+          ],
+          "ver_goal_nível_1": [
+            "/recordm/index.html#/definitions/103/q=instanceId:10001"
+          ],
+          "goal_nível_2": [],
+          "ver_goal_nível_2": [],
           "_definitionInfo": {
             "id": 103,
             "name": "Goal",
@@ -527,6 +673,11 @@
                 "id": 1195,
                 "name": "Nível",
                 "description": "$[*1,2,3] $instanceDescription"
+              },
+              {
+                "id": 1689,
+                "name": "Peso",
+                "description": "$number $instanceDescription Peso que este Goal tem no atingimento do Goal acima"
               },
               {
                 "id": 1198,
@@ -553,7 +704,7 @@
         "_source": {
           "id": 10001,
           "instanceId": 10001,
-          "version": 0,
+          "version": 1,
           "definitionId": 103,
           "definitionName": "Goal",
           "nome": [
@@ -563,7 +714,7 @@
             "IT"
           ],
           "detalhe_do_goal": [
-            "## O que permite\nA gestão de inventário, independentemente da empresa que a pratica, consiste numa série de processos com múltiplas funções referentes ao acompanhamento, manuseamento e gestão de materiais em stock. Uma gestão de inventário eficiente confere sempre vantagem competitiva às empresas, seja qual for a natureza do seu negócio. Além de reduzir os custos operacionais, uma boa gestão do inventário também dá origem a clientes satisfeitos, que continuarão a procurar a empresa no futuro, gerando assim mais negócio. No entanto, actualmente, a gestão de inventários não é tão simples como pode parecer à primeira vista.\n\n## Componentes\nO primeiro passo (e também o mais importante) para iniciar a gestão de inventário, consiste em recolher dados fidedignos em termos de detalhes e de valores. Seguidamente, há que implementar regras para proteger e guardar a informação de forma eficiente. Esta informação poderá tornar-se a base para a introdução de melhorias em termos operacionais, de estratégia e de produtividade.\nAdicionalmente à monitorização física dos materiais que entram e que saem do armazém, e às reconciliações dos balanços de inventário, existem outras tarefas que podem estar envolvidas na gestão de inventário, nomeadamente o acompanhamento e reporting de técnicas de reposição de produtos, análises relativas ao estado actual e projectado do inventário, ou o estabelecimento de objectivos periódicos e reengenharia da forma de trabalhar.\n\n## Vantagens\nApesar da existência de uma gestão adequada do inventário, por si só, já poder fazer uma grande diferença relativamente à obtenção e manutenção de vantagem competitiva, continua a ser necessário realizar esforços no sentido de reduzir continuamente os custos da gestão de inventário. Com este objectivo em mente, têm surgido no mercado vários sistemas de gestão de inventário propostos por empresas de software. Estes sistemas de gestão procuram assim ajudar as empresas a controlar e a gerir o seu inventário de forma mais eficiente.\nOs sistemas de gestão de inventário deverão permitir a integração com outras soluções de software já existentes nas empresas. Por outro lado, além de fornecerem um acesso rápido e fácil a informação detalhada sobre as compras e o inventário, os softwares de gestão de inventário também devem fornecer dados fidedignos e de forma atempada.\n\n## Considerações\nApesar deste tipo de sistemas serem ferramentas valiosas para as empresas, existem alguns aspectos básicos e extremamente significativos a ter em conta para assegurar um fluxo eficaz e adequado. Tais aspectos incluem algumas boas práticas, como introdução correcta de dados no sistema informático, a implementação de uma estratégia de reposição para todos os itens em armazém, e a elaboração de orientações específicas sobre excesso de inventário e roturas recorrentes de stocks.\n\nOs bons hábitos de gestão de inventário, conjuntamente com um sistema informático capaz e adequado, fornecerão a qualquer tipo de empresa uma grande vantagem competitiva sobre os seus concorrentes, dado que poderão realizar facilmente análises de stock e obter rapidamente informação fidedigna sobre o mesmo."
+            "##O que permite\nA gestão de inventário, independentemente da empresa que a pratica, consiste numa série de processos com múltiplas funções referentes ao acompanhamento, manuseamento e gestão de materiais em stock. Uma gestão de inventário eficiente confere sempre vantagem competitiva às empresas, seja qual for a natureza do seu negócio. Além de reduzir os custos operacionais, uma boa gestão do inventário também dá origem a clientes satisfeitos, que continuarão a procurar a empresa no futuro, gerando assim mais negócio. No entanto, actualmente, a gestão de inventários não é tão simples como pode parecer à primeira vista.\n\n##Componentes\nO primeiro passo (e também o mais importante) para iniciar a gestão de inventário, consiste em recolher dados fidedignos em termos de detalhes e de valores. Seguidamente, há que implementar regras para proteger e guardar a informação de forma eficiente. Esta informação poderá tornar-se a base para a introdução de melhorias em termos operacionais, de estratégia e de produtividade.\nAdicionalmente à monitorização física dos materiais que entram e que saem do armazém, e às reconciliações dos balanços de inventário, existem outras tarefas que podem estar envolvidas na gestão de inventário, nomeadamente o acompanhamento e reporting de técnicas de reposição de produtos, análises relativas ao estado actual e projectado do inventário, ou o estabelecimento de objectivos periódicos e reengenharia da forma de trabalhar.\n\n##Vantagens\nApesar da existência de uma gestão adequada do inventário, por si só, já poder fazer uma grande diferença relativamente à obtenção e manutenção de vantagem competitiva, continua a ser necessário realizar esforços no sentido de reduzir continuamente os custos da gestão de inventário. Com este objectivo em mente, têm surgido no mercado vários sistemas de gestão de inventário propostos por empresas de software. Estes sistemas de gestão procuram assim ajudar as empresas a controlar e a gerir o seu inventário de forma mais eficiente.\nOs sistemas de gestão de inventário deverão permitir a integração com outras soluções de software já existentes nas empresas. Por outro lado, além de fornecerem um acesso rápido e fácil a informação detalhada sobre as compras e o inventário, os softwares de gestão de inventário também devem fornecer dados fidedignos e de forma atempada.\n\n##Considerações\nApesar deste tipo de sistemas serem ferramentas valiosas para as empresas, existem alguns aspectos básicos e extremamente significativos a ter em conta para assegurar um fluxo eficaz e adequado. Tais aspectos incluem algumas boas práticas, como introdução correcta de dados no sistema informático, a implementação de uma estratégia de reposição para todos os itens em armazém, e a elaboração de orientações específicas sobre excesso de inventário e roturas recorrentes de stocks.\n\nOs bons hábitos de gestão de inventário, conjuntamente com um sistema informático capaz e adequado, fornecerão a qualquer tipo de empresa uma grande vantagem competitiva sobre os seus concorrentes, dado que poderão realizar facilmente análises de stock e obter rapidamente informação fidedigna sobre o mesmo."
           ],
           "anexo": [],
           "nível": [
@@ -576,6 +727,18 @@
           ],
           "nível_1_reference": [],
           "nível_2_reference": [],
+          "peso_goal_nível_2": [],
+          "peso_goal_nível_1": [],
+          "peso": [
+            "10"
+          ],
+          "controls": [
+            "/recordm/index.html#/definitions/96/q=goal:10001"
+          ],
+          "goal_nível_1": [],
+          "ver_goal_nível_1": [],
+          "goal_nível_2": [],
+          "ver_goal_nível_2": [],
           "_definitionInfo": {
             "id": 103,
             "name": "Goal",
@@ -596,6 +759,11 @@
                 "id": 1195,
                 "name": "Nível",
                 "description": "$[*1,2,3] $instanceDescription"
+              },
+              {
+                "id": 1689,
+                "name": "Peso",
+                "description": "$number $instanceDescription Peso que este Goal tem no atingimento do Goal acima"
               },
               {
                 "id": 1198,
@@ -620,7 +788,7 @@
     "recordm-103": {
       "id": 103,
       "name": "Goal",
-      "total": 8
+      "total": 9
     }
   }
 }

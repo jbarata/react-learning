@@ -1,5 +1,5 @@
 {
-  "took": 1,
+  "took": 2,
   "timed_out": false,
   "_shards": {
     "total": 5,
@@ -7,9 +7,143 @@
     "failed": 0
   },
   "hits": {
-    "total": 75,
+    "total": 76,
     "max_score": null,
     "hits": [
+      {
+        "_index": "recordm-96",
+        "_type": "recordm-96",
+        "_id": "27816",
+        "_score": null,
+        "_source": {
+          "id": 27816,
+          "instanceId": 27816,
+          "version": 10,
+          "definitionId": 96,
+          "definitionName": "Control",
+          "nome": [
+            "Controlo de este de criação d Assessments"
+          ],
+          "responsável": [
+            "/userm/user/33"
+          ],
+          "processo": [],
+          "nome_responsável": [
+            "CoB Administrator"
+          ],
+          "username_responsável": [
+            "cob-admin"
+          ],
+          "origem": [
+            "PINPAD"
+          ],
+          "descrição": [],
+          "goal": [
+            "27833"
+          ],
+          "descrição_goal": [
+            "Todos os PINPADs devem ter um IP associado"
+          ],
+          "findings": [
+            "/recordm/index.html#/definitions/97/q=control.raw:27816"
+          ],
+          "descrição_do_processo": [],
+          "anexo": [],
+          "severidade": [],
+          "código": [
+            "control-teste"
+          ],
+          "goal_name": [
+            "Todos os PINPADs com IP definido"
+          ],
+          "filtro": [],
+          "condição_de_sucesso": [
+            "asset.ip != null"
+          ],
+          "goal_reference": [
+            "Todos os PINPADs com IP definido"
+          ],
+          "responsável_reference": [
+            "CoB Administrator"
+          ],
+          "peso_goal": [
+            "50"
+          ],
+          "id_goal": [
+            "27833"
+          ],
+          "ver_goal": [
+            "/recordm/index.html#/instance/27833"
+          ],
+          "peso_goal_nível_2": [
+            "20"
+          ],
+          "peso_goal_nível_1": [
+            "10"
+          ],
+          "peso": [
+            "100"
+          ],
+          "nome_assessment_tool": [],
+          "assessment_tool": [
+            "RecordM"
+          ],
+          "periodicidade": [
+            "Mensal"
+          ],
+          "_definitionInfo": {
+            "id": 96,
+            "name": "Control",
+            "instanceLabel": [
+              {
+                "id": 1248,
+                "name": "Código",
+                "description": "$instanceLabel"
+              }
+            ],
+            "instanceDescription": [
+              {
+                "id": 1112,
+                "name": "Nome",
+                "description": "$text $instanceDescription"
+              },
+              {
+                "id": 1200,
+                "name": "Goal",
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
+              },
+              {
+                "id": 1127,
+                "name": "Origem",
+                "description": "$[Switch,PINPAD,BD] $instanceDescription"
+              },
+              {
+                "id": 1113,
+                "name": "Responsável",
+                "description": "$extRef(userm,/userm/user/search?q={{this}}) $instanceDescription"
+              },
+              {
+                "id": 1202,
+                "name": "FINDINGS",
+                "description": "$link $auto.text(id).join('/recordm/index.html#/definitions/97/q=control.raw:',id) $instanceDescription"
+              }
+            ]
+          },
+          "_links": {
+            "update": "recordm/instances/27816",
+            "delete": "recordm/instances/27816",
+            "size": "2"
+          }
+        },
+        "sort": [
+          27816
+        ]
+      },
       {
         "_index": "recordm-96",
         "_type": "recordm-96",
@@ -83,7 +217,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -177,7 +316,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -271,7 +415,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -365,7 +514,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -459,7 +613,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -553,7 +712,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -647,7 +811,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -741,7 +910,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -835,7 +1009,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -929,7 +1108,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -1023,7 +1207,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -1117,7 +1306,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -1211,7 +1405,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -1305,7 +1504,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -1399,7 +1603,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -1493,7 +1702,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -1585,7 +1799,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -1679,7 +1898,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -1773,7 +1997,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -1867,7 +2096,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -1961,7 +2195,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -2053,7 +2292,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -2145,7 +2389,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -2239,7 +2488,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -2333,7 +2587,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -2427,7 +2686,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -2521,7 +2785,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -2615,7 +2884,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -2709,7 +2983,12 @@
               {
                 "id": 1200,
                 "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
+                "description": "$ref(Goal,nível:3) $instanceDescription"
+              },
+              {
+                "id": 1705,
+                "name": "Ver Goal",
+                "description": "$link $auto.text(Id Goal).join('/recordm/index.html#/instance/',Id Goal) $instanceDescription"
               },
               {
                 "id": 1127,
@@ -2737,100 +3016,6 @@
         "sort": [
           12188
         ]
-      },
-      {
-        "_index": "recordm-96",
-        "_type": "recordm-96",
-        "_id": "12187",
-        "_score": null,
-        "_source": {
-          "id": 12187,
-          "instanceId": 12187,
-          "version": 3,
-          "definitionId": 96,
-          "definitionName": "Control",
-          "nome": [
-            "Access to DBA Role Privileges View"
-          ],
-          "responsável": [],
-          "processo": [],
-          "nome_responsável": [],
-          "username_responsável": [],
-          "origem": [
-            "BD"
-          ],
-          "descrição": [
-            "DBA_ROLE_PRIVS view is accessible to non DBA accounts"
-          ],
-          "goal": [
-            "12144"
-          ],
-          "descrição_goal": [],
-          "findings": [
-            "/recordm/index.html#/definitions/97/q=control.raw:12187"
-          ],
-          "descrição_do_processo": [],
-          "anexo": [],
-          "severidade": [
-            "2 - Medium"
-          ],
-          "código": [
-            "OR-027"
-          ],
-          "goal_name": [
-            "Access Control, Roles and Authorization"
-          ],
-          "goal_reference": [
-            "Access Control, Roles and Authorization"
-          ],
-          "responsável_reference": [],
-          "_definitionInfo": {
-            "id": 96,
-            "name": "Control",
-            "instanceLabel": [
-              {
-                "id": 1248,
-                "name": "Código",
-                "description": "$instanceLabel"
-              }
-            ],
-            "instanceDescription": [
-              {
-                "id": 1112,
-                "name": "Nome",
-                "description": "$text $instanceDescription"
-              },
-              {
-                "id": 1200,
-                "name": "Goal",
-                "description": "$ref(Goal,*) $instanceDescription"
-              },
-              {
-                "id": 1127,
-                "name": "Origem",
-                "description": "$[Switch,PINPAD,BD] $instanceDescription"
-              },
-              {
-                "id": 1113,
-                "name": "Responsável",
-                "description": "$extRef(userm,/userm/user/search?q={{this}}) $instanceDescription"
-              },
-              {
-                "id": 1202,
-                "name": "FINDINGS",
-                "description": "$link $auto.text(id).join('/recordm/index.html#/definitions/97/q=control.raw:',id) $instanceDescription"
-              }
-            ]
-          },
-          "_links": {
-            "update": "recordm/instances/12187",
-            "delete": "recordm/instances/12187",
-            "size": "2"
-          }
-        },
-        "sort": [
-          12187
-        ]
       }
     ]
   },
@@ -2838,7 +3023,7 @@
     "recordm-96": {
       "id": 96,
       "name": "Control",
-      "total": 75
+      "total": 76
     }
   }
 }
