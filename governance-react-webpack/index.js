@@ -16,6 +16,8 @@ var Panel = require('react-bootstrap/lib/Panel');
 var Well = require('react-bootstrap/lib/Well');
 var Alert = require('react-bootstrap/lib/Alert');
 var Label = require('react-bootstrap/lib/Label');
+var ListGroupItem = require('react-bootstrap/lib/ListGroupItem');
+var ListGroup = require('react-bootstrap/lib/ListGroup');
 
 
 
@@ -493,27 +495,84 @@ var GoalControls = React.createClass({
 
 
 var ControlDetails = React.createClass({
-    getMarkup: function(text) {
-        var rawMarkup = marked(text.toString(), {sanitize: true});
-        return { __html: rawMarkup };
+
+    loadAssessments: function(controlId){
+        var _this = this;
+
+        $.ajax({
+          url: "/recordm/recordm/definitions/search/111?q=id_control.raw:" + controlId +"&from=0&size=10&sort=data_de_criação&ascending=false",
+          xhrFields: { withCredentials: true },
+          dataType: 'json',
+          cache: false,
+          success: function(json) {
+              var assessments = [];
+              json.hits.hits.forEach(function(hit){
+                  var assessment = hit._source;
+
+                  if(parseInt(assessment["id_control"][0],10) == controlId){
+                      assessments.push(assessment);
+                  }
+              });
+
+              _this.setState({assessments: assessments});
+          }
+        });
+
+    },
+    loadAssessmentsFromFile: function(controlId){
+        var _this = this;
+
+        //TODO JBARATA isto há ser uma pesquisa ES
+        $.getJSON("assessments-search-result.json", function(json) {
+            var assessments = [];
+            json.hits.hits.forEach(function(hit){
+                var assessment = hit._source;
+
+                if(parseInt(assessment["id_control"][0],10) == controlId){
+                    assessments.push(assessment);
+                }
+            });
+
+            _this.setState({assessments: assessments});
+
+        });
+
+    },
+    getInitialState: function() {
+        return {
+            assessments: []
+        };
+    },
+    componentDidMount: function() {
+        //this.loadAssessments(this.props.control.id);
+        this.loadAssessmentsFromFile(this.props.control.id);
     },
     render: function() {
-        var control = this.props.control;
+        var rows = [];
+        var _this = this;
+        var emptyRow;
+
+        this.state.assessments.forEach(function(assessment) {
+
+            rows.push(
+                <ListGroupItem key={assessment.id}>
+                    {assessment.identificador}
+                    {assessment["data_de_criação_formatted"]}
+                </ListGroupItem>
+            );
+        });
+
+        if(rows.length == 0){
+            emptyRow = (<Well bsSize="small">Não há assessments...</Well>);
+        }
 
         return(
             <div>
-                <h5>Origem:</h5>
-                <Well bsSize="small">{control["origem"]}</Well>
-                <h5>Severidade:</h5>
-                <Well bsSize="small">{control["severidade"]}</Well>
-                <h5>Responsável:</h5>
-                <Well bsSize="small">{control["nome_responsável"]}</Well>
-
-                <h5>Descrição:</h5>
-                <Panel collapsible header="...">
-                    <span dangerouslySetInnerHTML={this.getMarkup(control["descrição"])} />
-                </Panel>
-
+                <h3>Últimos 10 Assessments</h3>
+                <ListGroup>
+                  {emptyRow}
+                  {rows}
+                </ListGroup>
             </div>
         );
     }
