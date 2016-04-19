@@ -284,9 +284,9 @@ var Goals = React.createClass({
                             <SparklinesLine />
                         </Sparklines>
 
-                        {delta}
-                        <span>&nbsp;(Peso: {goal.peso})</span>
-                        <span style={{"font-weight":"bold","font-size": "1.3em"}}>&nbsp;{goal.total}%</span>
+                        <div style={{"display":"inline","width":"50px;"}}>{delta}</div>
+                        <div style={{"display":"inline","width":"50px;"}}><span>&nbsp;(Peso: {goal.peso})</span></div>
+                        <div style={{"display":"inline","width":"50px;"}}><span style={{"font-weight":"bold","font-size": "1.3em"}}>&nbsp;{goal.total}%</span></div>
                     </div>
 
                 </Panel>
