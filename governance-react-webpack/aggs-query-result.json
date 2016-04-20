@@ -1,0 +1,790 @@
+{
+  "took": 4,
+  "timed_out": false,
+  "_shards": {
+    "total": 5,
+    "successful": 5,
+    "failed": 0
+  },
+  "hits": {
+    "total": 6,
+    "max_score": null,
+    "hits": [
+      {
+        "_index": "recordm-112",
+        "_type": "recordm-112",
+        "_id": "27917",
+        "_score": null,
+        "_source": {
+          "id": 27917,
+          "instanceId": 27917,
+          "version": 0,
+          "definitionId": 112,
+          "definitionName": "Assessment History",
+          "assessment": [
+            "27915"
+          ],
+          "data_assessment": [
+            "1461178977680"
+          ],
+          "control": [
+            "Controlo de este de criação d Assessments"
+          ],
+          "id_control": [
+            "27816"
+          ],
+          "ver_control": [
+            "/recordm/index.html#/definitions/96/q=id:27816"
+          ],
+          "peso_goal_nível_3": [
+            "0"
+          ],
+          "peso_goal_nível_2": [
+            "0"
+          ],
+          "peso_goal_nível_1": [
+            "0"
+          ],
+          "ver_assessment": [
+            "/recordm/index.html#/definitions/111/q=id:27915"
+          ],
+          "data": [
+            "1461182402440"
+          ],
+          "goal_nível_1": [
+            "Inventário de Equipamentos"
+          ],
+          "goal_nível_2": [
+            "Inventário de PinPads"
+          ],
+          "goal_nível_3": [
+            "Todos os PINPADs com IP definido"
+          ],
+          "resultado_assessment": [
+            "100"
+          ],
+          "peso_global": [
+            "0"
+          ],
+          "id_goal_nível_3": [
+            "27833"
+          ],
+          "id_goal_nível_2": [
+            "10004"
+          ],
+          "id_goal_nível_1": [
+            "10001"
+          ],
+          "data_assessment_formatted": [
+            "20/04/2016 20:02:57"
+          ],
+          "data_formatted": [
+            "20/04/2016 21:00:02"
+          ],
+          "_definitionInfo": {
+            "id": 112,
+            "name": "Assessment History",
+            "instanceLabel": [
+              {
+                "id": 1708,
+                "name": "Control",
+                "description": "$editForGroup(System) $instanceLabel"
+              }
+            ],
+            "instanceDescription": [
+              {
+                "id": 1726,
+                "name": "Data",
+                "description": "$datetime $default(now) $editForGroup(System) $instanceDescription"
+              },
+              {
+                "id": 1707,
+                "name": "Data Assessment",
+                "description": "$datetime $editForGroup(System) $instanceDescription"
+              },
+              {
+                "id": 1706,
+                "name": "Assessment",
+                "description": "$editForGroup(System) $instanceDescription"
+              },
+              {
+                "id": 1725,
+                "name": "Ver Assessment",
+                "description": "$auto.text(Assessment).join('/recordm/index.html#/definitions/111/q=id:',Assessment) $link $instanceDescription"
+              },
+              {
+                "id": 1710,
+                "name": "Ver Control",
+                "description": "$auto.text(Id Control).join('/recordm/index.html#/definitions/96/q=id:',Id Control) $link $instanceDescription"
+              }
+            ]
+          },
+          "_links": {
+            "update": "recordm/instances/27917",
+            "delete": "recordm/instances/27917",
+            "size": "2"
+          }
+        },
+        "sort": [
+          27917
+        ]
+      },
+      {
+        "_index": "recordm-112",
+        "_type": "recordm-112",
+        "_id": "27913",
+        "_score": null,
+        "_source": {
+          "id": 27913,
+          "instanceId": 27913,
+          "version": 2,
+          "definitionId": 112,
+          "definitionName": "Assessment History",
+          "assessment": [
+            "27897"
+          ],
+          "data_assessment": [
+            "1461164717069"
+          ],
+          "control": [
+            "Controlo de este de criação d Assessments"
+          ],
+          "id_control": [
+            "27816"
+          ],
+          "ver_control": [
+            "/recordm/index.html#/definitions/96/q=id:27816"
+          ],
+          "peso_goal_nível_3": [
+            "50"
+          ],
+          "peso_goal_nível_2": [
+            "20"
+          ],
+          "peso_goal_nível_1": [
+            "10"
+          ],
+          "ver_assessment": [
+            "/recordm/index.html#/definitions/111/q=id:27897"
+          ],
+          "data": [
+            "1461178801351"
+          ],
+          "goal_nível_1": [
+            "Inventário de Equipamentos"
+          ],
+          "goal_nível_2": [
+            "Inventário de PinPads"
+          ],
+          "goal_nível_3": [
+            "Todos os PINPADs com IP definido"
+          ],
+          "resultado_assessment": [
+            "100"
+          ],
+          "peso_global": [
+            "5"
+          ],
+          "id_goal_nível_3": [
+            "27833"
+          ],
+          "id_goal_nível_2": [
+            "10004"
+          ],
+          "id_goal_nível_1": [
+            "10001"
+          ],
+          "data_assessment_formatted": [
+            "20/04/2016 16:05:17"
+          ],
+          "data_formatted": [
+            "20/04/2016 20:00:01"
+          ],
+          "_definitionInfo": {
+            "id": 112,
+            "name": "Assessment History",
+            "instanceLabel": [
+              {
+                "id": 1708,
+                "name": "Control",
+                "description": "$editForGroup(System) $instanceLabel"
+              }
+            ],
+            "instanceDescription": [
+              {
+                "id": 1726,
+                "name": "Data",
+                "description": "$datetime $default(now) $editForGroup(System) $instanceDescription"
+              },
+              {
+                "id": 1707,
+                "name": "Data Assessment",
+                "description": "$datetime $editForGroup(System) $instanceDescription"
+              },
+              {
+                "id": 1706,
+                "name": "Assessment",
+                "description": "$editForGroup(System) $instanceDescription"
+              },
+              {
+                "id": 1725,
+                "name": "Ver Assessment",
+                "description": "$auto.text(Assessment).join('/recordm/index.html#/definitions/111/q=id:',Assessment) $link $instanceDescription"
+              },
+              {
+                "id": 1710,
+                "name": "Ver Control",
+                "description": "$auto.text(Id Control).join('/recordm/index.html#/definitions/96/q=id:',Id Control) $link $instanceDescription"
+              }
+            ]
+          },
+          "_links": {
+            "update": "recordm/instances/27913",
+            "delete": "recordm/instances/27913",
+            "size": "2"
+          }
+        },
+        "sort": [
+          27913
+        ]
+      },
+      {
+        "_index": "recordm-112",
+        "_type": "recordm-112",
+        "_id": "27911",
+        "_score": null,
+        "_source": {
+          "id": 27911,
+          "instanceId": 27911,
+          "version": 2,
+          "definitionId": 112,
+          "definitionName": "Assessment History",
+          "assessment": [
+            "27897"
+          ],
+          "data_assessment": [
+            "1461164717069"
+          ],
+          "control": [
+            "Controlo de este de criação d Assessments"
+          ],
+          "id_control": [
+            "27816"
+          ],
+          "ver_control": [
+            "/recordm/index.html#/definitions/96/q=id:27816"
+          ],
+          "peso_goal_nível_3": [
+            "50"
+          ],
+          "peso_goal_nível_2": [
+            "20"
+          ],
+          "peso_goal_nível_1": [
+            "10"
+          ],
+          "ver_assessment": [
+            "/recordm/index.html#/definitions/111/q=id:27897"
+          ],
+          "data": [
+            "1461178747833"
+          ],
+          "goal_nível_1": [
+            "Inventário de Equipamentos"
+          ],
+          "goal_nível_2": [
+            "Inventário de PinPads"
+          ],
+          "goal_nível_3": [
+            "Todos os PINPADs com IP definido"
+          ],
+          "resultado_assessment": [
+            "100"
+          ],
+          "peso_global": [
+            "5"
+          ],
+          "id_goal_nível_3": [
+            "27833"
+          ],
+          "id_goal_nível_2": [
+            "10004"
+          ],
+          "id_goal_nível_1": [
+            "10001"
+          ],
+          "data_assessment_formatted": [
+            "20/04/2016 16:05:17"
+          ],
+          "data_formatted": [
+            "20/04/2016 19:59:07"
+          ],
+          "_definitionInfo": {
+            "id": 112,
+            "name": "Assessment History",
+            "instanceLabel": [
+              {
+                "id": 1708,
+                "name": "Control",
+                "description": "$editForGroup(System) $instanceLabel"
+              }
+            ],
+            "instanceDescription": [
+              {
+                "id": 1726,
+                "name": "Data",
+                "description": "$datetime $default(now) $editForGroup(System) $instanceDescription"
+              },
+              {
+                "id": 1707,
+                "name": "Data Assessment",
+                "description": "$datetime $editForGroup(System) $instanceDescription"
+              },
+              {
+                "id": 1706,
+                "name": "Assessment",
+                "description": "$editForGroup(System) $instanceDescription"
+              },
+              {
+                "id": 1725,
+                "name": "Ver Assessment",
+                "description": "$auto.text(Assessment).join('/recordm/index.html#/definitions/111/q=id:',Assessment) $link $instanceDescription"
+              },
+              {
+                "id": 1710,
+                "name": "Ver Control",
+                "description": "$auto.text(Id Control).join('/recordm/index.html#/definitions/96/q=id:',Id Control) $link $instanceDescription"
+              }
+            ]
+          },
+          "_links": {
+            "update": "recordm/instances/27911",
+            "delete": "recordm/instances/27911",
+            "size": "2"
+          }
+        },
+        "sort": [
+          27911
+        ]
+      },
+      {
+        "_index": "recordm-112",
+        "_type": "recordm-112",
+        "_id": "27909",
+        "_score": null,
+        "_source": {
+          "id": 27909,
+          "instanceId": 27909,
+          "version": 2,
+          "definitionId": 112,
+          "definitionName": "Assessment History",
+          "assessment": [
+            "27897"
+          ],
+          "data_assessment": [
+            "1461164717069"
+          ],
+          "control": [
+            "Controlo de este de criação d Assessments"
+          ],
+          "id_control": [
+            "27816"
+          ],
+          "ver_control": [
+            "/recordm/index.html#/definitions/96/q=id:27816"
+          ],
+          "peso_goal_nível_3": [
+            "50"
+          ],
+          "peso_goal_nível_2": [
+            "20"
+          ],
+          "peso_goal_nível_1": [
+            "10"
+          ],
+          "ver_assessment": [
+            "/recordm/index.html#/definitions/111/q=id:27897"
+          ],
+          "data": [
+            "1461178664768"
+          ],
+          "goal_nível_1": [
+            "Inventário de Equipamentos"
+          ],
+          "goal_nível_2": [
+            "Inventário de PinPads"
+          ],
+          "goal_nível_3": [
+            "Todos os PINPADs com IP definido"
+          ],
+          "resultado_assessment": [
+            "100"
+          ],
+          "peso_global": [
+            "5"
+          ],
+          "id_goal_nível_3": [
+            "27833"
+          ],
+          "id_goal_nível_2": [
+            "10004"
+          ],
+          "id_goal_nível_1": [
+            "10001"
+          ],
+          "data_assessment_formatted": [
+            "20/04/2016 16:05:17"
+          ],
+          "data_formatted": [
+            "20/04/2016 19:57:44"
+          ],
+          "_definitionInfo": {
+            "id": 112,
+            "name": "Assessment History",
+            "instanceLabel": [
+              {
+                "id": 1708,
+                "name": "Control",
+                "description": "$editForGroup(System) $instanceLabel"
+              }
+            ],
+            "instanceDescription": [
+              {
+                "id": 1726,
+                "name": "Data",
+                "description": "$datetime $default(now) $editForGroup(System) $instanceDescription"
+              },
+              {
+                "id": 1707,
+                "name": "Data Assessment",
+                "description": "$datetime $editForGroup(System) $instanceDescription"
+              },
+              {
+                "id": 1706,
+                "name": "Assessment",
+                "description": "$editForGroup(System) $instanceDescription"
+              },
+              {
+                "id": 1725,
+                "name": "Ver Assessment",
+                "description": "$auto.text(Assessment).join('/recordm/index.html#/definitions/111/q=id:',Assessment) $link $instanceDescription"
+              },
+              {
+                "id": 1710,
+                "name": "Ver Control",
+                "description": "$auto.text(Id Control).join('/recordm/index.html#/definitions/96/q=id:',Id Control) $link $instanceDescription"
+              }
+            ]
+          },
+          "_links": {
+            "update": "recordm/instances/27909",
+            "delete": "recordm/instances/27909",
+            "size": "2"
+          }
+        },
+        "sort": [
+          27909
+        ]
+      },
+      {
+        "_index": "recordm-112",
+        "_type": "recordm-112",
+        "_id": "27905",
+        "_score": null,
+        "_source": {
+          "id": 27905,
+          "instanceId": 27905,
+          "version": 4,
+          "definitionId": 112,
+          "definitionName": "Assessment History",
+          "assessment": [
+            "27897"
+          ],
+          "data_assessment": [
+            "1461164717069"
+          ],
+          "control": [
+            "Controlo de este de criação d Assessments"
+          ],
+          "id_control": [
+            "27816"
+          ],
+          "ver_control": [
+            "/recordm/index.html#/definitions/96/q=id:27816"
+          ],
+          "peso_goal_nível_3": [
+            "50"
+          ],
+          "peso_goal_nível_2": [
+            "20"
+          ],
+          "peso_goal_nível_1": [
+            "10"
+          ],
+          "ver_assessment": [
+            "/recordm/index.html#/definitions/111/q=id:27897"
+          ],
+          "data": [
+            "1461165499000"
+          ],
+          "goal_nível_1": [
+            "Inventário de Equipamentos"
+          ],
+          "goal_nível_2": [
+            "Inventário de PinPads"
+          ],
+          "goal_nível_3": [
+            "Todos os PINPADs com IP definido"
+          ],
+          "resultado_assessment": [
+            "42"
+          ],
+          "global": [],
+          "peso_global": [
+            "5"
+          ],
+          "id_goal_nível_3": [
+            "27833"
+          ],
+          "id_goal_nível_2": [
+            "10004"
+          ],
+          "id_goal_nível_1": [
+            "10001"
+          ],
+          "data_assessment_formatted": [
+            "20/04/2016 16:05:17"
+          ],
+          "data_formatted": [
+            "20/04/2016 16:18:19"
+          ],
+          "_definitionInfo": {
+            "id": 112,
+            "name": "Assessment History",
+            "instanceLabel": [
+              {
+                "id": 1708,
+                "name": "Control",
+                "description": "$editForGroup(System) $instanceLabel"
+              }
+            ],
+            "instanceDescription": [
+              {
+                "id": 1726,
+                "name": "Data",
+                "description": "$datetime $default(now) $editForGroup(System) $instanceDescription"
+              },
+              {
+                "id": 1707,
+                "name": "Data Assessment",
+                "description": "$datetime $editForGroup(System) $instanceDescription"
+              },
+              {
+                "id": 1706,
+                "name": "Assessment",
+                "description": "$editForGroup(System) $instanceDescription"
+              },
+              {
+                "id": 1725,
+                "name": "Ver Assessment",
+                "description": "$auto.text(Assessment).join('/recordm/index.html#/definitions/111/q=id:',Assessment) $link $instanceDescription"
+              },
+              {
+                "id": 1710,
+                "name": "Ver Control",
+                "description": "$auto.text(Id Control).join('/recordm/index.html#/definitions/96/q=id:',Id Control) $link $instanceDescription"
+              }
+            ]
+          },
+          "_links": {
+            "update": "recordm/instances/27905",
+            "delete": "recordm/instances/27905",
+            "size": "2"
+          }
+        },
+        "sort": [
+          27905
+        ]
+      },
+      {
+        "_index": "recordm-112",
+        "_type": "recordm-112",
+        "_id": "27903",
+        "_score": null,
+        "_source": {
+          "id": 27903,
+          "instanceId": 27903,
+          "version": 4,
+          "definitionId": 112,
+          "definitionName": "Assessment History",
+          "assessment": [
+            "27897"
+          ],
+          "data_assessment": [
+            "1461164717069"
+          ],
+          "control": [
+            "Controlo de este de criação d Assessments"
+          ],
+          "id_control": [
+            "27816"
+          ],
+          "ver_control": [
+            "/recordm/index.html#/definitions/96/q=id:27816"
+          ],
+          "peso_goal_nível_3": [
+            "50"
+          ],
+          "peso_goal_nível_2": [
+            "20"
+          ],
+          "peso_goal_nível_1": [
+            "10"
+          ],
+          "ver_assessment": [
+            "/recordm/index.html#/definitions/111/q=id:27897"
+          ],
+          "data": [
+            "1461165397231"
+          ],
+          "goal_nível_1": [
+            "Inventário de Equipamentos"
+          ],
+          "goal_nível_2": [
+            "Inventário de PinPads"
+          ],
+          "goal_nível_3": [
+            "Todos os PINPADs com IP definido"
+          ],
+          "resultado_assessment": [
+            "12"
+          ],
+          "global": [],
+          "peso_global": [],
+          "id_goal_nível_3": [
+            "27833"
+          ],
+          "id_goal_nível_2": [
+            "10004"
+          ],
+          "id_goal_nível_1": [
+            "10001"
+          ],
+          "data_assessment_formatted": [
+            "20/04/2016 16:05:17"
+          ],
+          "data_formatted": [
+            "20/04/2016 16:16:37"
+          ],
+          "_definitionInfo": {
+            "id": 112,
+            "name": "Assessment History",
+            "instanceLabel": [
+              {
+                "id": 1708,
+                "name": "Control",
+                "description": "$editForGroup(System) $instanceLabel"
+              }
+            ],
+            "instanceDescription": [
+              {
+                "id": 1726,
+                "name": "Data",
+                "description": "$datetime $default(now) $editForGroup(System) $instanceDescription"
+              },
+              {
+                "id": 1707,
+                "name": "Data Assessment",
+                "description": "$datetime $editForGroup(System) $instanceDescription"
+              },
+              {
+                "id": 1706,
+                "name": "Assessment",
+                "description": "$editForGroup(System) $instanceDescription"
+              },
+              {
+                "id": 1725,
+                "name": "Ver Assessment",
+                "description": "$auto.text(Assessment).join('/recordm/index.html#/definitions/111/q=id:',Assessment) $link $instanceDescription"
+              },
+              {
+                "id": 1710,
+                "name": "Ver Control",
+                "description": "$auto.text(Id Control).join('/recordm/index.html#/definitions/96/q=id:',Id Control) $link $instanceDescription"
+              }
+            ]
+          },
+          "_links": {
+            "update": "recordm/instances/27903",
+            "delete": "recordm/instances/27903",
+            "size": "2"
+          }
+        },
+        "sort": [
+          27903
+        ]
+      }
+    ]
+  },
+  "aggregations": {
+    "2": {
+      "buckets": [
+        {
+          "1": {
+            "value": 12
+          },
+          "key_as_string": "2016-04-20T15:16:00.000Z",
+          "key": 1461165360000,
+          "doc_count": 1
+        },
+        {
+          "1": {
+            "value": 42
+          },
+          "key_as_string": "2016-04-20T15:18:00.000Z",
+          "key": 1461165480000,
+          "doc_count": 1
+        },
+        {
+          "1": {
+            "value": 100
+          },
+          "key_as_string": "2016-04-20T18:57:00.000Z",
+          "key": 1461178620000,
+          "doc_count": 1
+        },
+        {
+          "1": {
+            "value": 100
+          },
+          "key_as_string": "2016-04-20T18:59:00.000Z",
+          "key": 1461178740000,
+          "doc_count": 1
+        },
+        {
+          "1": {
+            "value": 90
+          },
+          "key_as_string": "2016-04-20T19:00:00.000Z",
+          "key": 1461178800000,
+          "doc_count": 1
+        },
+        {
+          "1": {
+            "value": null
+          },
+          "key_as_string": "2016-04-20T20:00:00.000Z",
+          "key": 1461182400000,
+          "doc_count": 1
+        }
+      ]
+    }
+  },
+  "_definitions": {
+    "recordm-112": {
+      "id": 112,
+      "name": "Assessment History",
+      "total": 6
+    }
+  }
+}
