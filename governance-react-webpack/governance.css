@@ -1,0 +1,13 @@
+body{
+    overflow: auto !important;
+}
+
+.governance-inner-container{
+    margin:10px 40px;
+}
+
+@media (max-width: 767px) {
+    .governance-inner-container{
+        margin:0;
+    }
+}
