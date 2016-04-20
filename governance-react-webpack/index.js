@@ -360,8 +360,7 @@ var Goals = React.createClass({
 
     getInitialState: function() {
         return {
-            goals: [],
-            goalEvolutionData:[]
+            goals: []
         };
     },
     componentDidMount: function() {
@@ -377,7 +376,7 @@ var Goals = React.createClass({
         var emptyRow;
 
         this.state.goals.forEach(function(goal) {
-            var delta =(<span>=</span>);
+            var delta =(<span>(=)</span>);
             if(goal.delta < 0){
                 delta = (<span style={{"color":"red"}}>{goal.delta}</span>);
             }else if (goal.delta > 0){
@@ -394,16 +393,18 @@ var Goals = React.createClass({
                     <div style={{"float": "right"}} >
 
                         <table style={{"display":"inline"}}>
-                            <tbody><tr>
-                                <td>
-                                    <Sparklines data={goal.sparklineData} limit={10} width={100} height={20} margin={5}>
-                                        <SparklinesLine />
-                                    </Sparklines>
-                                </td>
-                                <td style={{"width":"60px"}}><span style={{"font-weight":"bold","font-size": "1.4em"}}>{goal.total}%</span></td>
-                                <td style={{"width":"30px","font-size": "0.8em"}}>{delta}</td>
-                                <td style={{"width":"50px","font-size": "0.8em"}}>Peso:{goal.peso}</td>
-                            </tr></tbody>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <Sparklines data={goal.sparklineData} limit={10} width={100} height={20} margin={5}>
+                                            <SparklinesLine />
+                                        </Sparklines>
+                                    </td>
+                                    <td style={{"width":"60px"}}><span style={{"font-weight":"bold","font-size": "1.4em"}}>{goal.total}%</span></td>
+                                    <td style={{"width":"30px","font-size": "0.8em"}}>{delta}</td>
+                                    <td style={{"width":"50px","font-size": "0.8em"}}>Peso:{goal.peso}</td>
+                                </tr>
+                            </tbody>
                         </table>
 
                     </div>
@@ -483,11 +484,73 @@ var GoalControls = React.createClass({
 
               window.console.log(controls);
 
-              _this.setState({controls: controls});
+              _this.setState({controls: controls}); // render controls right away
+
+              controls.forEach(function(control){
+                  _this.loadControlTotals(control.id, function(total, delta, sparklineData){
+                      control.total = total;
+                      control.delta = delta;
+                      control.sparklineData = sparklineData;
+
+                      _this.setState({controls: controls}); // render controls totals as they arrive
+                  })
+              })
           }
         });
 
     },
+    loadControlTotals: function(controlId, onSucess){
+        var _this = this;
+        //NOTA: query base construidaa partir de uma query kibana tipo:
+        //http://prod2.lidl:8080/kibana/?#/visualize/create?_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'id_control.raw:27816')),vis:(aggs:!((id:'1',params:(value:resultado_assessment.raw,weight:peso_control.raw),schema:metric,type:weighted-mean),(id:'2',params:(customInterval:'2h',extended_bounds:(),field:data.date,interval:m,min_doc_count:1),schema:bucket,type:date_histogram)),listeners:(),params:(perPage:10,showMeticsAtAllLevels:!f,showPartialRows:!f,spyPerPage:10),type:table))&indexPattern=recordm-112&type=table&_g=(refreshInterval:(display:Off,pause:!f,section:0,value:0),time:(from:now-8h,mode:relative,to:now))
+        var baseQuery = '{"size":0,"query":{"filtered":{"query":{"query_string":{"query":"id_control.raw:__CONTROL_ID__","analyze_wildcard":true}},"filter":{"bool":{"must":[{"range":{"data.date":{"gte":__LOWER_DATE__,"lte":__UPPER_DATE__}}}],"must_not":[]}}}},"aggs":{"2":{"date_histogram":{"field":"data.date","interval":"__DATE_INTERVAL__","pre_zone":"+00:00","pre_zone_adjust_large_interval":true,"min_doc_count":1,"extended_bounds":{"min":__LOWER_DATE__,"max":__UPPER_DATE__}},"aggs":{"1":{"weighted-mean":{"value":"resultado_assessment.raw","weight":"peso_control.raw"}}}}}}';
+        var aggsQuery = baseQuery.replace(/__CONTROL_ID__/g, controlId)
+                                .replace(/__LOWER_DATE__/g, '\"now-1w/d\"')
+                                .replace(/__UPPER_DATE__/g, '\"now\"')
+                                .replace(/__DATE_INTERVAL__/g, '1m'); //TODD JOBARATA ver o intervalo : 1w ou 1d ou 1h ou 1m
+
+
+        $.ajax({
+          url: "/recordm/recordm/definitions/search/advanced/112", //tem de ser advanced para se conseguir enfiar a query do kibana :)
+          data : aggsQuery,
+          type: "POST",
+          xhrFields: { withCredentials: true },
+          cache: false,
+          success: function(json) {
+              var sparklineData = [];
+              var lastTotal;
+              var lastDelta;
+
+              //NOTA IMPORTANTE: segundo o mimes é possivel que as 2 keys seguintes mudem caso a query seja alterada (com mais aggs ou assim)
+              var aggregationsKey  = "2";
+              var bucketsKey  = "1";
+
+
+              json.aggregations[aggregationsKey].buckets.forEach(function(bucket){
+                  var value = bucket[bucketsKey].value;
+
+                  if(value!=null) sparklineData.push(value)
+              });
+
+              var dataLength = sparklineData.length;
+
+              if(dataLength == 0){
+                  lastTotal = 0;
+                  lastDelta = 0;
+              }else if(dataLength == 1){
+                  lastTotal = sparklineData[0];
+                  lastDelta = lastTotal;
+              }else{
+                  lastTotal = sparklineData[dataLength-1];
+                  lastDelta = lastTotal - sparklineData[dataLength-2];
+
+              }
+
+              onSucess(lastTotal, lastDelta, sparklineData);
+          }
+        });
+    },
+
     loadControlsFromFile: function(goalId){
         var _this = this;
 
@@ -514,22 +577,14 @@ var GoalControls = React.createClass({
         });
 
     },
-    loadSparklineData: function(){
-        //TODO implementar pesquisa e fazer um set state com os da
-
-        this.setState({controlEvolutionData: [5, 10, 5, 20, 8, 15, 5, 10, 5, 20, 8, 15]});
-
-    },
     getInitialState: function() {
         return {
-            controls: [],
-            controlEvolutionData:[]
+            controls: []
         };
     },
     componentDidMount: function() {
         //this.loadControls(this.props.goal.id);
         this.loadControlsFromFile(this.props.goal.id);
-        this.loadSparklineData();
     },
 
     render: function() {
@@ -571,16 +626,18 @@ var GoalControls = React.createClass({
 
 
                         <table style={{"display":"inline"}}>
-                            <tbody><tr>
-                                <td>
-                                    <Sparklines data={_this.state.controlEvolutionData} limit={10} width={100} height={20} margin={5}>
-                                        <SparklinesLine />
-                                    </Sparklines>
-                                </td>
-                                <td style={{"width":"60px"}}><span style={{"font-weight":"bold","font-size": "1.4em"}}>{control.total}%</span></td>
-                                <td style={{"width":"30px","font-size": "0.8em"}}>{delta}</td>
-                                <td style={{"width":"50px","font-size": "0.8em"}}>Peso:{control.peso}</td>
-                            </tr></tbody>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <Sparklines data={control.sparklineData} limit={10} width={100} height={20} margin={5}>
+                                            <SparklinesLine />
+                                        </Sparklines>
+                                    </td>
+                                    <td style={{"width":"60px"}}><span style={{"font-weight":"bold","font-size": "1.4em"}}>{control.total}%</span></td>
+                                    <td style={{"width":"30px","font-size": "0.8em"}}>{delta}</td>
+                                    <td style={{"width":"50px","font-size": "0.8em"}}>Peso:{control.peso}</td>
+                                </tr>
+                            </tbody>
                         </table>
 
                     </div>
