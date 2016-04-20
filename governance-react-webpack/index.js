@@ -1,19 +1,20 @@
+//DEV deps
+var marked = require('marked');
+import $ from "jquery";
+//DEV deps
+
 var React = require('react');
 var ReactDOM = require('react-dom');
 
-import $ from "jquery";
-var marked = require('marked');
 import { Sparklines, SparklinesLine } from 'react-sparklines';
 
-var Button = require('react-bootstrap/lib/Button');
-var Grid = require('react-bootstrap/lib/Grid');
-var Row = require('react-bootstrap/lib/Row');
-var Col = require('react-bootstrap/lib/Col');
-var PanelGroup = require('react-bootstrap/lib/PanelGroup');
-var Panel = require('react-bootstrap/lib/Panel');
-var Well = require('react-bootstrap/lib/Well');
-var Alert = require('react-bootstrap/lib/Alert');
-
+import {
+    Button,
+    Grid, Row, Col,
+    PanelGroup, Panel,
+    Well,
+    Alert
+} from 'react-bootstrap'
 
 
 var GovernanceDashboard = React.createClass({
@@ -95,7 +96,7 @@ var GovernanceDashboard = React.createClass({
 
         return (
 
-                <Well bsSize="large" style={{"margin":"10px 40px"}}>
+                <Well bsSize="large" className="governance-inner-container" >
                   <Grid>
                       <Row>
                         <Col md={12} lg={12}>
@@ -287,7 +288,7 @@ var Goals = React.createClass({
                         </Sparklines>
 
 
-                        <div style={{"display":"inline","width":"50px"}}><span>Peso: {goal.peso}</span></div>
+                        <div style={{"display":"inline","width":"50px"}}><span>Peso:{goal.peso}</span></div>
                         <div style={{"display":"inline","width":"50px"}}><span style={{"font-weight":"bold","font-size": "1.4em"}}>&nbsp;{goal.total}%</span></div>
                         <div style={{"display":"inline","width":"50px"}}>&nbsp;{delta}</div>
                     </div>
@@ -457,7 +458,7 @@ var GoalControls = React.createClass({
                         </Sparklines>
 
 
-                        <div style={{"display":"inline","width":"50px"}}><span>(Peso: {control.peso})</span></div>
+                        <div style={{"display":"inline","width":"50px"}}><span>(Peso:{control.peso})</span></div>
                     <div style={{"display":"inline","width":"50px"}}><span style={{"font-weight":"bold","font-size": "1.4em"}}>&nbsp;{control.total}%</span></div>
                         <div style={{"display":"inline","width":"50px"}}>&nbsp;{delta}</div>
                     </div>
