@@ -271,7 +271,7 @@ var Goals = React.createClass({
             if(goal.delta < 0){
                 delta = (<span style={{"color":"red"}}>{goal.delta}</span>);
             }else if (goal.delta > 0){
-                delta = (<span>+ {goal.delta}</span>);
+                delta = (<span>+{goal.delta}</span>);
             }
 
             rows.push(
@@ -426,7 +426,7 @@ var GoalControls = React.createClass({
             if(control.delta < 0){
                 delta = (<span style={{"color":"red"}}>{control.delta}</span>);
             }else if (control.delta > 0){
-                delta = (<span>+ {control.delta}</span>);
+                delta = (<span>+{control.delta}</span>);
             }
 
             var viewControlUrl = "/recordm/index.html#/instance/" + control.id;
