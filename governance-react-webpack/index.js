@@ -5,19 +5,14 @@ import $ from "jquery";
 var marked = require('marked');
 import { Sparklines, SparklinesLine } from 'react-sparklines';
 
-var ButtonToolbar = require('react-bootstrap/lib/ButtonToolbar');
 var Button = require('react-bootstrap/lib/Button');
 var Grid = require('react-bootstrap/lib/Grid');
 var Row = require('react-bootstrap/lib/Row');
 var Col = require('react-bootstrap/lib/Col');
-var Badge = require('react-bootstrap/lib/Badge');
 var PanelGroup = require('react-bootstrap/lib/PanelGroup');
 var Panel = require('react-bootstrap/lib/Panel');
 var Well = require('react-bootstrap/lib/Well');
 var Alert = require('react-bootstrap/lib/Alert');
-var Label = require('react-bootstrap/lib/Label');
-var ListGroupItem = require('react-bootstrap/lib/ListGroupItem');
-var ListGroup = require('react-bootstrap/lib/ListGroup');
 
 
 
@@ -31,9 +26,7 @@ var GovernanceDashboard = React.createClass({
             currentLevel:1,
             parentGoalId: undefined,
             currentGoal:undefined,
-            showGoalDetails:false,
-            currentControl: undefined,
-            currentControlId: undefined
+            showGoalDetails:false
         };
     },
     componentDidMount: function() {
@@ -48,16 +41,6 @@ var GovernanceDashboard = React.createClass({
             parentGoalId: parentGoal.id,
             currentGoal: parentGoal,
             showGoalDetails:false
-        } );
-    },
-    handleGoToControlLevel: function(level, parentControl){
-        //save previous state for undo later on
-        this.props.stateHistory.push(this.state);
-
-        this.setState( {
-            currentLevel: level,
-            currentControl: parentControl,
-            currentControlId: parentControl.id
         } );
     },
     handleGoBackLevel: function(){
@@ -85,7 +68,6 @@ var GovernanceDashboard = React.createClass({
         var backBtn;
         var goals;
         var goalDetails;
-        var controlDetails;
 
         if(this.state.currentLevel > 1){
             backBtn = (<Button bsStyle="link" onClick={this.handleGoBackLevel}>
@@ -111,10 +93,6 @@ var GovernanceDashboard = React.createClass({
                                         onGoToLevel={this.handleGoToControlLevel}/> );
         }
 
-        if(this.state.currentLevel == 5 ){
-            controlDetails = ( <ControlDetails control={this.state.currentControl} key={this.state.currentControl.id} /> );
-        }
-
         return (
 
                 <Well bsSize="large" style={{"margin":"10px 40px"}}>
@@ -126,7 +104,6 @@ var GovernanceDashboard = React.createClass({
                                 currentGoal={this.state.currentGoal}
                                 totalPercent={this.state.totalPercent}
                                 onShowGoalDetails={this.handleShowGoalDetails}
-                                currentControl={this.state.currentControl}
                              />
 
                             </Col>
@@ -156,17 +133,6 @@ var GovernanceDashboard = React.createClass({
                       </Row>
                   </Grid>
 
-                  <Grid>
-                      <Row key={this.state.currentControlId}>
-                          <Col  md={12} lg={12}>
-                              {controlDetails}
-                          </Col>
-                      </Row>
-                  </Grid>
-
-
-
-
               </Well>
 
         );
@@ -184,8 +150,6 @@ var MainTitle = React.createClass({
             showDetailsBtn = (<Button bsStyle="link" onClick={this.props.onShowGoalDetails}>
                                     <i className="icon-question-sign" style={{"vertical-align": "middle"}}></i>
                              </Button>);
-        }else if(this.props.currentLevel == 5){
-            title = this.props.currentControl.nome;
         }
 
         return(
@@ -300,9 +264,9 @@ var Goals = React.createClass({
         this.state.goals.forEach(function(goal) {
             var delta =(<span>(=)</span>);
             if(goal.delta < 0){
-                delta = (<span style={{"color":"red"}}>({goal.delta}%)</span>);
+                delta = (<span style={{"color":"red"}}>{goal.delta}</span>);
             }else if (goal.delta > 0){
-                delta = (<span>(+ {goal.delta}%)</span>);
+                delta = (<span>+ {goal.delta}</span>);
             }
 
             rows.push(
@@ -317,9 +281,10 @@ var Goals = React.createClass({
                             <SparklinesLine />
                         </Sparklines>
 
-                        <div style={{"display":"inline","width":"50px"}}>{delta}</div>
-                        <div style={{"display":"inline","width":"50px"}}><span>&nbsp;(Peso: {goal.peso})</span></div>
-                        <div style={{"display":"inline","width":"50px"}}><span style={{"font-weight":"bold","font-size": "1.3em"}}>&nbsp;{goal.total}%</span></div>
+
+                        <div style={{"display":"inline","width":"50px"}}><span>Peso: {goal.peso}</span></div>
+                        <div style={{"display":"inline","width":"50px"}}><span style={{"font-weight":"bold","font-size": "1.4em"}}>&nbsp;{goal.total}%</span></div>
+                        <div style={{"display":"inline","width":"50px"}}>&nbsp;{delta}</div>
                     </div>
 
                 </Panel>
@@ -442,9 +407,6 @@ var GoalControls = React.createClass({
         this.loadSparklineData();
     },
 
-    goLevelClick:function(control){
-        this.props.onGoToLevel(this.props.level + 1, control);
-    },
     render: function() {
         var rows = [];
         var _this = this;
@@ -453,26 +415,42 @@ var GoalControls = React.createClass({
         this.state.controls.forEach(function(control) {
             var delta =(<span>(=)</span>);
             if(control.delta < 0){
-                delta = (<span style={{"color":"red"}}>({control.delta}%)</span>);
+                delta = (<span style={{"color":"red"}}>{control.delta}</span>);
             }else if (control.delta > 0){
-                delta = (<span>(+ {control.delta}%)</span>);
+                delta = (<span>+ {control.delta}</span>);
             }
 
+            var viewControlUrl = "/recordm/index.html#/instance/" + control.id;
+            var searchAssessmentsUrl = "/recordm/index.html#/definitions/111/q=" + encodeURIComponent("id_control.raw:" + control.id);
+            var searchFindingsUrl = "/recordm/index.html#/definitions/97/q=" + encodeURIComponent("control.raw:" + control.id);
+
+
             rows.push(
-                <Panel  key={control.id}>
-                    <Button bsStyle="link" bsSize="large" style={{"font-size":"1.2em"}}
-                            onClick={ () => _this.goLevelClick(control) }>
-                        {control.nome}
-                    </Button>
+                <Panel  key={control.id} >
+
+                    <div style={{"display":"inline"}}>
+                        <span style={{"font-size":"1.2em"}}>{control.nome}</span>
+                        <br/>
+                        <Button bsStyle="link" target="_blank" href={viewControlUrl}>
+                            Detalhes
+                        </Button>
+                        <Button bsStyle="link" target="_blank" href={searchAssessmentsUrl}>
+                            Assessments
+                        </Button>
+                        <Button bsStyle="link" target="_blank" href={searchFindingsUrl}>
+                            Findings
+                        </Button>
+                    </div>
 
                     <div style={{"float": "right"}} >
                         <Sparklines data={_this.state.controlEvolutionData} limit={15} width={100} height={20} margin={5}>
                             <SparklinesLine />
                         </Sparklines>
 
-                        <div style={{"display":"inline","width":"50px"}}>{delta}</div>
-                        <div style={{"display":"inline","width":"50px"}}><span>&nbsp;(Peso: {control.peso})</span></div>
-                        <div style={{"display":"inline","width":"50px"}}><span style={{"font-weight":"bold","font-size": "1.3em"}}>&nbsp;{control.total}%</span></div>
+
+                        <div style={{"display":"inline","width":"50px"}}><span>(Peso: {control.peso})</span></div>
+                    <div style={{"display":"inline","width":"50px"}}><span style={{"font-weight":"bold","font-size": "1.4em"}}>&nbsp;{control.total}%</span></div>
+                        <div style={{"display":"inline","width":"50px"}}>&nbsp;{delta}</div>
                     </div>
 
                 </Panel>
@@ -494,138 +472,6 @@ var GoalControls = React.createClass({
 });
 
 
-var ControlDetails = React.createClass({
-
-    loadAssessments: function(controlId){
-        var _this = this;
-
-        $.ajax({
-          url: "/recordm/recordm/definitions/search/111?q=id_control.raw:" + controlId +"&from=0&size=10&sort=data_de_criação&ascending=false",
-          xhrFields: { withCredentials: true },
-          dataType: 'json',
-          cache: false,
-          success: function(json) {
-              var assessments = [];
-              json.hits.hits.forEach(function(hit){
-                  var assessment = hit._source;
-
-                  if(parseInt(assessment["id_control"][0],10) == controlId){
-                      assessments.push(assessment);
-                  }
-              });
-
-              _this.setState({assessments: assessments});
-          }
-        });
-
-    },
-    loadAssessmentsFromFile: function(controlId){
-        var _this = this;
-
-        //TODO JBARATA isto há ser uma pesquisa ES
-        $.getJSON("assessments-search-result.json", function(json) {
-            var assessments = [];
-            json.hits.hits.forEach(function(hit){
-                var assessment = hit._source;
-
-                if(parseInt(assessment["id_control"][0],10) == controlId){
-                    assessments.push(assessment);
-                }
-            });
-
-            _this.setState({assessments: assessments});
-
-        });
-
-    },
-    getInitialState: function() {
-        return {
-            assessments: []
-        };
-    },
-    componentDidMount: function() {
-        //this.loadAssessments(this.props.control.id);
-        this.loadAssessmentsFromFile(this.props.control.id);
-    },
-    render: function() {
-        var rows = [];
-        var _this = this;
-        var emptyRow;
-
-        this.state.assessments.forEach(function(assessment) {
-
-            rows.push(
-                <ListGroupItem key={assessment.id}>
-                    {assessment.identificador}
-                    {assessment["data_de_criação_formatted"]}
-                </ListGroupItem>
-            );
-        });
-
-        if(rows.length == 0){
-            emptyRow = (<Well bsSize="small">Não há assessments...</Well>);
-        }
-
-        return(
-            <div>
-                <h3>Últimos 10 Assessments</h3>
-                <ListGroup>
-                  {emptyRow}
-                  {rows}
-                </ListGroup>
-            </div>
-        );
-    }
-});
-
-{/*
-var GoalItems = React.createClass({
-
-    render: function() {
-        var rows = [];
-        var title;
-
-        if(this.props.title){
-            title = (<h3> {this.props.title} </h3>);
-        }
-
-        if(this.props.items){
-            this.props.items.forEach(function(item) {
-                rows.push(
-                    <ListGroupItem bsStyle="default">
-                        {item.name} <Badge pullRight={true}>{item.total}</Badge>
-                    </ListGroupItem>
-                );
-            });
-        }
-
-        return(
-            <div>
-                {title}
-                <ListGroup>
-                  {rows}
-                </ListGroup>
-            </div>
-        );
-    }
-});
-
-var GoalGraphics = React.createClass({
-
-    render: function() {
-        var rows = [];
-
-        return(
-            <div style={{height: 'auto'}}>
-                <ResponsiveEmbed a16by9>
-                    <embed type="application/pdf" src="103_ADENE_SCE_SCE0000081420823.pdf" />
-                </ResponsiveEmbed>
-            </div>
-        );
-    }
-});
-
-*/}
 
 /**************** Main stuff ******************/
 var stateHistory=[]; //array to hold the dashboard states as we navigate so we can easaly go back
