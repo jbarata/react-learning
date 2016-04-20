@@ -1,5 +1,5 @@
 {
-  "took": 6,
+  "took": 2,
   "timed_out": false,
   "_shards": {
     "total": 5,
@@ -18,7 +18,7 @@
         "_source": {
           "id": 27833,
           "instanceId": 27833,
-          "version": 0,
+          "version": 3,
           "definitionId": 103,
           "definitionName": "Goal",
           "nome": [
@@ -63,6 +63,12 @@
           ],
           "nível_1_reference": [],
           "nível_2_reference": [
+            "Inventário de PinPads"
+          ],
+          "nome_goal_nível_1": [
+            "Inventário de Equipamentos"
+          ],
+          "nome_goal_nível_2": [
             "Inventário de PinPads"
           ],
           "_definitionInfo": {
@@ -608,7 +614,7 @@
         "_source": {
           "id": 10004,
           "instanceId": 10004,
-          "version": 2,
+          "version": 3,
           "definitionId": 103,
           "definitionName": "Goal",
           "nome": [
@@ -653,6 +659,9 @@
           ],
           "goal_nível_2": [],
           "ver_goal_nível_2": [],
+          "nome_goal_nível_1": [
+            "Inventário de Equipamentos"
+          ],
           "_definitionInfo": {
             "id": 103,
             "name": "Goal",

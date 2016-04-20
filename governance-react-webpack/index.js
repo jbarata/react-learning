@@ -169,11 +169,24 @@ var MainTitle = React.createClass({
 });
 
 var Goals = React.createClass({
-    loadGoals: function(level, parentGoalId){
+    loadGoals: function(level, parentGoalId, sortBy, sortAsc){
         var _this = this;
+        var query = "nível.raw:" + level;
+
+        if(level >1 ){
+            query += " AND nível_" + (level-1) + ".raw:" + parentGoalId;
+        }
+
+
+        var sort = "&sort="+(sortBy||"nome");
+        if(sortAsc != undefined){
+            sort += "&ascending=" + sortAsc;
+        } else{
+            sort += "&ascending=true"
+        }
 
         $.ajax({
-          url: "/recordm/recordm/definitions/search/103?q=*",
+          url: "/recordm/recordm/definitions/search/103?q=" + encodeURIComponent(query) + sort,
           xhrFields: { withCredentials: true },
           dataType: 'json',
           cache: false,
@@ -182,19 +195,12 @@ var Goals = React.createClass({
               json.hits.hits.forEach(function(hit){
                   var goal = hit._source;
 
-                  //TODO JBARATA hack temporario para por o total e o peso de cada goal
+                  //TODO JBARATA hack temporario para por o total
                   goal.total = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
-                  goal.peso = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
                   goal.delta = Math.floor(Math.random() * 200) -100 ; //TODO JBARATA implementar
 
-                  if(parseInt(goal["nível"],10) == level){
-                      if(level == 1 ||
-                          (level == 2 && goal["nível_1"] == parentGoalId) ||
-                          (level == 3 && goal["nível_2"] == parentGoalId) ){
+                  goals.push(goal);
 
-                          goals.push(goal);
-                      }
-                  }
               });
 
               window.console.log(goals);
@@ -213,9 +219,8 @@ var Goals = React.createClass({
             json.hits.hits.forEach(function(hit){
                 var goal = hit._source;
 
-                //TODO JBARATA hack temporario para por o total e o peso de cada goal
+                //TODO JBARATA hack temporario para por o total
                 goal.total = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
-                goal.peso = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
                 goal.delta = Math.floor(Math.random() * 200) -100 ; //TODO JBARATA implementar
 
                 if(parseInt(goal["nível"],10) == level){
@@ -333,11 +338,17 @@ var GoalDetails = React.createClass({
 
 var GoalControls = React.createClass({
 
-    loadControls: function(goalId){
+    loadControls: function(goalId, sortBy, sortAsc){
         var _this = this;
+        var sort = "&sort="+(sortBy||"nome");
+        if(sortAsc != undefined){
+            sort += "&ascending=" + sortAsc;
+        } else{
+            sort += "&ascending=true"
+        }
 
         $.ajax({
-          url: "/recordm/recordm/definitions/search/96?q=goal.raw:"+goalId,
+          url: "/recordm/recordm/definitions/search/96?q=goal.raw:" + goalId + sort,
           xhrFields: { withCredentials: true },
           dataType: 'json',
           cache: false,
@@ -346,9 +357,8 @@ var GoalControls = React.createClass({
               json.hits.hits.forEach(function(hit){
                   var control = hit._source;
 
-                  //TODO JBARATA hack temporario para por o peso de cada control
+                  //TODO JBARATA hack temporario para por o total de cada control
                   control.total = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
-                  control.peso = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
                   control.delta = Math.floor(Math.random() * 200) -100 ; //TODO JBARATA implementar
 
                   controls.push(control);
@@ -371,9 +381,8 @@ var GoalControls = React.createClass({
             json.hits.hits.forEach(function(hit){
                 var control = hit._source;
 
-                //TODO JBARATA hack temporario para por o peso de cada control
+                //TODO JBARATA hack temporario para por o total de cada control
                 control.total = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
-                control.peso = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
                 control.delta = Math.floor(Math.random() * 200) -100 ; //TODO JBARATA implementar
 
 
