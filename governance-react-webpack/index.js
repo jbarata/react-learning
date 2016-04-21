@@ -392,14 +392,13 @@ var Goals = React.createClass({
 
                     <div style={{"float": "right"}} >
 
+                        <Sparklines data={goal.sparklineData} limit={10} width={100} height={20} margin={5}>
+                            <SparklinesLine />
+                        </Sparklines>
+
                         <table style={{"display":"inline"}}>
                             <tbody>
                                 <tr>
-                                    <td>
-                                        <Sparklines data={goal.sparklineData} limit={10} width={100} height={20} margin={5}>
-                                            <SparklinesLine />
-                                        </Sparklines>
-                                    </td>
                                     <td style={{"width":"60px"}}><span style={{"font-weight":"bold","font-size": "1.4em"}}>{goal.total}%</span></td>
                                     <td style={{"width":"30px","font-size": "0.8em"}}>{delta}</td>
                                     <td style={{"width":"50px","font-size": "0.8em"}}>Peso:{goal.peso}</td>
@@ -624,15 +623,13 @@ var GoalControls = React.createClass({
 
                     <div style={{"float": "right"}} >
 
+                        <Sparklines data={control.sparklineData} limit={10} width={100} height={20} margin={5}>
+                            <SparklinesLine />
+                        </Sparklines>
 
                         <table style={{"display":"inline"}}>
                             <tbody>
                                 <tr>
-                                    <td>
-                                        <Sparklines data={control.sparklineData} limit={10} width={100} height={20} margin={5}>
-                                            <SparklinesLine />
-                                        </Sparklines>
-                                    </td>
                                     <td style={{"width":"60px"}}><span style={{"font-weight":"bold","font-size": "1.4em"}}>{control.total}%</span></td>
                                     <td style={{"width":"30px","font-size": "0.8em"}}>{delta}</td>
                                     <td style={{"width":"50px","font-size": "0.8em"}}>Peso:{control.peso}</td>
