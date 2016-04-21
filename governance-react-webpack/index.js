@@ -1,6 +1,6 @@
 //DEV deps
-var marked = require('marked');
-import $ from "jquery";
+//var marked = require('marked');
+//import $ from "jquery";
 //DEV deps
 
 var React = require('react');
@@ -141,8 +141,95 @@ var GovernanceDashboard = React.createClass({
 });
 
 var MainTitle = React.createClass({
+    loadTotals: function(level, goalId, onSucess){
+        var _this = this;
+        //NOTA: query base construidaa partir de uma query kibana tipo:
+        //http://prod2.lidl:8080/kibana/?#/visualize/create?_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'id_goal_n%C3%ADvel_2.raw:10004')),vis:(aggs:!((id:'1',params:(value:resultado_assessment.raw,weight:peso_goal_n%C3%ADvel_2.raw),schema:metric,type:weighted-mean),(id:'2',params:(customInterval:'2h',extended_bounds:(),field:data.date,interval:m,min_doc_count:1),schema:bucket,type:date_histogram)),listeners:(),params:(perPage:10,showMeticsAtAllLevels:!f,showPartialRows:!f,spyPerPage:10),type:table))&indexPattern=recordm-112&type=table&_g=(refreshInterval:(display:Off,pause:!f,section:0,value:0),time:(from:now-6h,mode:relative,to:now))
+        var baseQueryGlobal = '{"size":0,"query":{"filtered":{"query":{"query_string":{"query":"*","analyze_wildcard":true}},"filter":{"bool":{"must":[{"range":{"data.date":{"gte":__LOWER_DATE__,"lte":__UPPER_DATE__}}}],"must_not":[]}}}},"aggs":{"2":{"date_histogram":{"field":"data.date","interval":"__DATE_INTERVAL__","pre_zone":"+00:00","pre_zone_adjust_large_interval":true,"min_doc_count":1,"extended_bounds":{"min":__LOWER_DATE__,"max":__UPPER_DATE__}},"aggs":{"1":{"weighted-mean":{"value":"resultado_assessment.raw","weight":"peso_global.raw"}}}}}}';
+        var baseQueryGoal = '{"size":0,"query":{"filtered":{"query":{"query_string":{"query":"id_goal_nível___NIVEL__.raw:__GOALID__","analyze_wildcard":true}},"filter":{"bool":{"must":[{"range":{"data.date":{"gte":__LOWER_DATE__,"lte":__UPPER_DATE__}}}],"must_not":[]}}}},"aggs":{"2":{"date_histogram":{"field":"data.date","interval":"__DATE_INTERVAL__","pre_zone":"+00:00","pre_zone_adjust_large_interval":true,"min_doc_count":1,"extended_bounds":{"min":__LOWER_DATE__,"max":__UPPER_DATE__}},"aggs":{"1":{"weighted-mean":{"value":"resultado_assessment.raw","weight":"peso_goal_nível___NIVEL__.raw"}}}}}}';
+
+        var aggsQuery;
+
+        if(level==1){
+            aggsQuery= baseQueryGlobal.replace(/__LOWER_DATE__/g, '\"now-1w/d\"')
+                                   .replace(/__UPPER_DATE__/g, '\"now\"')
+                                   .replace(/__DATE_INTERVAL__/g, '1m'); //TODD JOBARATA ver o intervalo : 1w ou 1d ou 1h ou 1m
+
+        }else {
+            aggsQuery= baseQueryGoal.replace(/__NIVEL__/g, level)
+                                   .replace(/__GOALID__/g, goalId)
+                                   .replace(/__LOWER_DATE__/g, '\"now-1w/d\"')
+                                   .replace(/__UPPER_DATE__/g, '\"now\"')
+                                   .replace(/__DATE_INTERVAL__/g, '1m'); //TODD JOBARATA ver o intervalo : 1w ou 1d ou 1h ou 1m
+
+        }
+
+
+        $.ajax({
+          url: "/recordm/recordm/definitions/search/advanced/112", //tem de ser advanced para se conseguir enfiar a query do kibana :)
+          data : aggsQuery,
+          type: "POST",
+          xhrFields: { withCredentials: true },
+          cache: false,
+          success: function(json) {
+              var sparklineData = [];
+              var lastTotal;
+              var lastDelta;
+
+              //NOTA IMPORTANTE: segundo o mimes é possivel que as 2 keys seguintes mudem caso a query seja alterada (com mais aggs ou assim)
+              var aggregationsKey  = "2";
+              var bucketsKey  = "1";
+
+
+              json.aggregations[aggregationsKey].buckets.forEach(function(bucket){
+                  var value = bucket[bucketsKey].value;
+
+                  if(value!=null) sparklineData.push(value)
+              });
+
+              var dataLength = sparklineData.length;
+
+              if(dataLength == 0){
+                  lastTotal = 0;
+                  lastDelta = 0;
+              }else if(dataLength == 1){
+                  lastTotal = sparklineData[0];
+                  lastDelta = lastTotal;
+              }else{
+                  lastTotal = sparklineData[dataLength-1];
+                  lastDelta = lastTotal - sparklineData[dataLength-2];
+
+              }
+
+              onSucess(lastTotal, lastDelta, sparklineData);
+          }
+        });
+    },
+    getInitialState: function() {
+        return {
+            headerTotal: undefined,
+            headerDelta: undefined,
+            headerSparklineData:[]
+        };
+    },
+    componentDidMount: function() {
+        var goalId;
+        var _this = this;
+
+        if(this.props.currentGoal) goalId = this.props.currentGoal.id;
+
+        this.loadTotals(this.props.currentLevel, goalId, function(total, delta, sparklineData){
+
+            _this.setState({
+                headerTotal: total,
+                headerDelta: delta,
+                headerSparklineData: sparklineData
+            });
+        })
+
+    },
+
     render: function() {
-        var goalEvolutionData = [5, 10, 5, 20, 8, 15, 5, 10, 5, 20, 8, 15];
         var title = "Governance";
         var showDetailsBtn;
 
@@ -159,10 +246,11 @@ var MainTitle = React.createClass({
                 {showDetailsBtn}
 
                 <div style={{"float": "right"}} >
-                    <Sparklines data={goalEvolutionData} limit={15} width={100} height={50} margin={5}>
+                    <Sparklines data={this.state.headerSparklineData} limit={15} width={100} height={50} margin={5}>
                       <SparklinesLine />
                     </Sparklines>
-                    <h1 style={{"display": "inline-block", "vertical-align": "top"}}>{this.props.totalPercent}%</h1>
+                    <h1 style={{"display": "inline-block", "vertical-align": "top"}}>{this.state.headerTotal}%</h1>
+
                 </div>
             </div>
         );
@@ -364,8 +452,8 @@ var Goals = React.createClass({
         };
     },
     componentDidMount: function() {
-        //this.loadGoals(this.props.level, this.props.parentGoalId);
-        this.loadGoalsFromFile(this.props.level, this.props.parentGoalId);
+        this.loadGoals(this.props.level, this.props.parentGoalId);
+        //this.loadGoalsFromFile(this.props.level, this.props.parentGoalId);
     },
     goLevelClick:function(goal){
         this.props.onGoToLevel(this.props.level + 1, goal);
@@ -582,8 +670,8 @@ var GoalControls = React.createClass({
         };
     },
     componentDidMount: function() {
-        //this.loadControls(this.props.goal.id);
-        this.loadControlsFromFile(this.props.goal.id);
+        this.loadControls(this.props.goal.id);
+        //this.loadControlsFromFile(this.props.goal.id);
     },
 
     render: function() {
