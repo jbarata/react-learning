@@ -18,20 +18,13 @@ import {
 
 
 var GovernanceDashboard = React.createClass({
-    calculateTotalPercent: function(){
-        this.setState({totalPercent:94});
-    },
     getInitialState: function() {
         return {
-            totalPercent: undefined,
             currentLevel:1,
             parentGoalId: undefined,
             currentGoal:undefined,
             showGoalDetails:false
         };
-    },
-    componentDidMount: function() {
-        this.calculateTotalPercent();
     },
     handleGoToLevel: function(level, parentGoal){
         //save previous state for undo later on
@@ -70,12 +63,6 @@ var GovernanceDashboard = React.createClass({
         var goals;
         var goalDetails;
 
-        if(this.state.currentLevel > 1){
-            backBtn = (<Button bsStyle="link" onClick={this.handleGoBackLevel}>
-                            <i className="icon-level-up" style={{"vertical-align": "middle"}}></i>
-                       </Button>);
-        }
-
         if(this.state.currentLevel < 4){
             goals =(<Goals  level={this.state.currentLevel}
                             parentGoalId={this.state.parentGoalId}
@@ -97,22 +84,21 @@ var GovernanceDashboard = React.createClass({
         return (
 
                 <Well bsSize="large" className="governance-inner-container" >
-                  <Grid>
-                      <Row>
+                  <Grid key={this.state.currentLevel}>
+                      <Row style={{"margin-bottom":"20px"}}>
                         <Col md={12} lg={12}>
                             <MainTitle
                                 currentLevel={this.state.currentLevel}
                                 currentGoal={this.state.currentGoal}
-                                totalPercent={this.state.totalPercent}
                                 onShowGoalDetails={this.handleShowGoalDetails}
+                                onGoBackLevel={this.handleGoBackLevel}
                              />
 
                             </Col>
                       </Row>
 
-                      <Row key={this.state.currentLevel}>  {/* esta key é o que permite fazer o re-render completo qundo se muda o currentLevel */}
+                      <Row >
                         <Col md={12} lg={12}>
-                            <h2>{backBtn}</h2>
                             {goals}
                         </Col>
                       </Row>
@@ -141,7 +127,7 @@ var GovernanceDashboard = React.createClass({
 });
 
 var MainTitle = React.createClass({
-    loadTotals: function(level, goalId, onSucess){
+    loadTotals: function(headerlevel, goalId, onSucess){
         var _this = this;
         //NOTA: query base construidaa partir de uma query kibana tipo:
         //http://prod2.lidl:8080/kibana/?#/visualize/create?_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'id_goal_n%C3%ADvel_2.raw:10004')),vis:(aggs:!((id:'1',params:(value:resultado_assessment.raw,weight:peso_goal_n%C3%ADvel_2.raw),schema:metric,type:weighted-mean),(id:'2',params:(customInterval:'2h',extended_bounds:(),field:data.date,interval:m,min_doc_count:1),schema:bucket,type:date_histogram)),listeners:(),params:(perPage:10,showMeticsAtAllLevels:!f,showPartialRows:!f,spyPerPage:10),type:table))&indexPattern=recordm-112&type=table&_g=(refreshInterval:(display:Off,pause:!f,section:0,value:0),time:(from:now-6h,mode:relative,to:now))
@@ -150,13 +136,13 @@ var MainTitle = React.createClass({
 
         var aggsQuery;
 
-        if(level==1){
+        if(headerlevel==0){
             aggsQuery= baseQueryGlobal.replace(/__LOWER_DATE__/g, '\"now-1w/d\"')
                                    .replace(/__UPPER_DATE__/g, '\"now\"')
                                    .replace(/__DATE_INTERVAL__/g, '1m'); //TODD JOBARATA ver o intervalo : 1w ou 1d ou 1h ou 1m
 
         }else {
-            aggsQuery= baseQueryGoal.replace(/__NIVEL__/g, level)
+            aggsQuery= baseQueryGoal.replace(/__NIVEL__/g, headerlevel)
                                    .replace(/__GOALID__/g, goalId)
                                    .replace(/__LOWER_DATE__/g, '\"now-1w/d\"')
                                    .replace(/__UPPER_DATE__/g, '\"now\"')
@@ -193,11 +179,11 @@ var MainTitle = React.createClass({
                   lastTotal = 0;
                   lastDelta = 0;
               }else if(dataLength == 1){
-                  lastTotal = sparklineData[0];
+                  lastTotal =  sparklineData[0].toFixed(1);
                   lastDelta = lastTotal;
               }else{
-                  lastTotal = sparklineData[dataLength-1];
-                  lastDelta = lastTotal - sparklineData[dataLength-2];
+                  lastTotal =  sparklineData[dataLength-1].toFixed(1);
+                  lastDelta =  (lastTotal - sparklineData[dataLength-2]).toFixed(1);
 
               }
 
@@ -213,12 +199,13 @@ var MainTitle = React.createClass({
         };
     },
     componentDidMount: function() {
-        var goalId;
         var _this = this;
+        var goalId;
+        var headerlevel = this.props.currentLevel - 1;
 
         if(this.props.currentGoal) goalId = this.props.currentGoal.id;
 
-        this.loadTotals(this.props.currentLevel, goalId, function(total, delta, sparklineData){
+        this.loadTotals(headerlevel, goalId, function(total, delta, sparklineData){
 
             _this.setState({
                 headerTotal: total,
@@ -232,6 +219,7 @@ var MainTitle = React.createClass({
     render: function() {
         var title = "Governance";
         var showDetailsBtn;
+        var backBtn;
 
         if(this.props.currentLevel > 1 && this.props.currentLevel < 5){
             title = this.props.currentGoal.nome;
@@ -240,9 +228,15 @@ var MainTitle = React.createClass({
                              </Button>);
         }
 
+        if(this.props.currentLevel > 1){
+            backBtn = (<Button bsStyle="link" onClick={this.props.onGoBackLevel}>
+                            <i className="icon-level-up" style={{"vertical-align": "middle", "font-size":"1.4em"}}></i>
+                       </Button>);
+        }
+
         return(
             <div>
-                <h1 style={{"display": "inline-block", "max-width":"70%"}} >{title}</h1>
+                <h1 style={{"display": "inline-block", "max-width":"70%"}} >{backBtn}{title}</h1>
                 {showDetailsBtn}
 
                 <div style={{"float": "right"}} >
@@ -348,11 +342,11 @@ var Goals = React.createClass({
                   lastTotal = 0;
                   lastDelta = 0;
               }else if(dataLength == 1){
-                  lastTotal = sparklineData[0];
-                  lastDelta = lastTotal;
+                  lastTotal =  sparklineData[0].toFixed(1);
+                  lastDelta =  lastTotal;
               }else{
-                  lastTotal = sparklineData[dataLength-1];
-                  lastDelta = lastTotal - sparklineData[dataLength-2];
+                  lastTotal =  sparklineData[dataLength-1].toFixed(1);
+                  lastDelta =  (lastTotal - sparklineData[dataLength-2]).toFixed(1);
 
               }
 
@@ -454,9 +448,22 @@ var Goals = React.createClass({
     componentDidMount: function() {
         this.loadGoals(this.props.level, this.props.parentGoalId);
         //this.loadGoalsFromFile(this.props.level, this.props.parentGoalId);
+        this.buildCreateGoalUrl();
     },
     goLevelClick:function(goal){
         this.props.onGoToLevel(this.props.level + 1, goal);
+    },
+    buildCreateGoalUrl : function(){
+        var n1='{"opts":{"auto-paste-if-empty":true},"fields":[{"value":"1","fieldDefinition":{"name":"Nível"}}]}'
+        var n2='{"opts":{"auto-paste-if-empty":true},"fields":[{"value":"2","fieldDefinition":{"name":"Nível"}},{"value":"__PARENT_GOAL_ID__","fieldDefinition":{"name":"Nível 1"}}]}'
+        var n3='{"opts":{"auto-paste-if-empty":true},"fields":[{"value":"3","fieldDefinition":{"name":"Nível"}},{"value":"__PARENT_GOAL_ID__","fieldDefinition":{"name":"Nível 2"}}]}'
+
+        var createGoalUrl = '/recordm/index.html#/instance/create/103/data=';
+        if(this.props.level == 1) createGoalUrl += n1;
+        if(this.props.level == 2) createGoalUrl += n2.replace(/__PARENT_GOAL_ID__/g,this.props.parentGoalId);
+        if(this.props.level == 3) createGoalUrl += n3.replace(/__PARENT_GOAL_ID__/g,this.props.parentGoalId);
+
+        this.setState({createGoalUrl: createGoalUrl});
     },
     render: function() {
         var rows = [];
@@ -504,10 +511,16 @@ var Goals = React.createClass({
             emptyRow = (<Well bsSize="small">Não há goals definidos neste nível</Well>);
         }
 
+
+        var createGoal = (<Button bsStyle="link" target="_blank" href={this.state.createGoalUrl} title="Novo Goal">
+                            <i className="icon-plus-sign" style={{"font-size":"1.4em"}}></i>
+                        </Button>)
+
         return(
             <PanelGroup>
                 {emptyRow}
                 {rows}
+                <div style={{"float": "right", "margin-right":"-12px"}}>{createGoal}</div>
             </PanelGroup>
         );
     }
@@ -552,7 +565,7 @@ var GoalControls = React.createClass({
         }
 
         $.ajax({
-          url: "/recordm/recordm/definitions/search/96?q=goal.raw:" + goalId + sort,
+          url: "/recordm/recordm/definitions/search/96?q=goal_nível_3.raw:" + goalId + sort,
           xhrFields: { withCredentials: true },
           dataType: 'json',
           cache: false,
