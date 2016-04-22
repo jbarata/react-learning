@@ -240,7 +240,7 @@ var MainTitle = React.createClass({
                 {showDetailsBtn}
 
                 <div style={{"float": "right"}} >
-                    <Sparklines data={this.state.headerSparklineData} limit={15} width={100} height={50} margin={5}>
+                    <Sparklines data={this.state.headerSparklineData} limit={15} width={150} height={35} margin={5} style={{"margin-top":"13px"}}>
                       <SparklinesLine />
                     </Sparklines>
                     <h1 style={{"display": "inline-block", "vertical-align": "top"}}>{this.state.headerTotal}%</h1>
@@ -426,11 +426,11 @@ var Goals = React.createClass({
                 lastTotal = 0;
                 lastDelta = 0;
             }else if(dataLength == 1){
-                lastTotal = sparklineData[0];
+                lastTotal = sparklineData[0].toFixed(1);
                 lastDelta = lastTotal;
             }else{
-                lastTotal = sparklineData[dataLength-1];
-                lastDelta = lastTotal - sparklineData[dataLength-2];
+                lastTotal = sparklineData[dataLength-1].toFixed(1);
+                lastDelta = (lastTotal - sparklineData[dataLength-2]).toFixed(1);
 
             }
 
@@ -575,8 +575,8 @@ var GoalControls = React.createClass({
                   var control = hit._source;
 
                   //TODO JBARATA hack temporario para por o total de cada control
-                  control.total = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
-                  control.delta = Math.floor(Math.random() * 200) -100 ; //TODO JBARATA implementar
+                  //control.total = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
+                  //control.delta = Math.floor(Math.random() * 200) -100 ; //TODO JBARATA implementar
 
                   controls.push(control);
 
@@ -593,7 +593,19 @@ var GoalControls = React.createClass({
                       control.sparklineData = sparklineData;
 
                       _this.setState({controls: controls}); // render controls totals as they arrive
-                  })
+                  });
+
+                  _this.loadAssessmentCount(control.id, function(count){
+                      control.assessmentCount = count;
+
+                      _this.setState({controls: controls}); // render controls totals as they arrive
+                  });
+
+                  _this.loadFindingsCount(control.id, function(count){
+                      control.findingsCount = count;
+
+                      _this.setState({controls: controls}); // render controls totals as they arrive
+                  });
               })
           }
         });
@@ -638,11 +650,11 @@ var GoalControls = React.createClass({
                   lastTotal = 0;
                   lastDelta = 0;
               }else if(dataLength == 1){
-                  lastTotal = sparklineData[0];
+                  lastTotal = sparklineData[0].toFixed(1);
                   lastDelta = lastTotal;
               }else{
-                  lastTotal = sparklineData[dataLength-1];
-                  lastDelta = lastTotal - sparklineData[dataLength-2];
+                  lastTotal = sparklineData[dataLength-1].toFixed(1);
+                  lastDelta = (lastTotal - sparklineData[dataLength-2]).toFixed(1);
 
               }
 
@@ -677,6 +689,37 @@ var GoalControls = React.createClass({
         });
 
     },
+    loadAssessmentCount: function(controlId, onSuccess){
+        var _this = this;
+        var searchAssessmentsUrl = "/recordm/recordm/definitions/search/111?q=" + encodeURIComponent("id_control.raw:" + controlId);
+
+        $.ajax({
+          url: searchAssessmentsUrl,
+          xhrFields: { withCredentials: true },
+          dataType: 'json',
+          cache: false,
+          success: function(json) {
+              onSuccess(json.hits.total);
+          }
+        });
+
+    },
+    loadFindingsCount: function(controlId, onSuccess){
+        var _this = this;
+        var searchFindingsUrl = "/recordm/recordm/definitions/search/97?q=" + encodeURIComponent("control.raw:" + controlId);
+
+        $.ajax({
+          url: searchFindingsUrl,
+          xhrFields: { withCredentials: true },
+          dataType: 'json',
+          cache: false,
+          success: function(json) {
+              onSuccess(json.hits.total);
+          }
+        });
+
+    },
+
     getInitialState: function() {
         return {
             controls: []
@@ -700,9 +743,9 @@ var GoalControls = React.createClass({
                 delta = (<span>+{control.delta}</span>);
             }
 
-            var viewControlUrl = "/recordm/index.html#/instance/" + control.id;
-            var searchAssessmentsUrl = "/recordm/index.html#/definitions/111/q=" + encodeURIComponent("id_control.raw:" + control.id);
-            var searchFindingsUrl = "/recordm/index.html#/definitions/97/q=" + encodeURIComponent("control.raw:" + control.id);
+            var viewControlHref = "/recordm/index.html#/instance/" + control.id;
+            var searchAssessmentsHref = "/recordm/index.html#/definitions/111/q=" + encodeURIComponent("id_control.raw:" + control.id);
+            var searchFindingsHref = "/recordm/index.html#/definitions/97/q=" + encodeURIComponent("control.raw:" + control.id);
 
 
             rows.push(
@@ -711,14 +754,14 @@ var GoalControls = React.createClass({
                     <div style={{"display":"inline"}}>
                         <span style={{"font-size":"1.2em"}}>{control.nome}</span>
                         <br/>
-                        <Button bsStyle="link" target="_blank" href={viewControlUrl}>
+                        <Button bsStyle="link" target="_blank" href={viewControlHref}>
                             Detalhes
                         </Button>
-                        <Button bsStyle="link" target="_blank" href={searchAssessmentsUrl}>
-                            Assessments
+                        <Button bsStyle="link" target="_blank" href={searchAssessmentsHref}>
+                            Assessments ({control.assessmentCount})
                         </Button>
-                        <Button bsStyle="link" target="_blank" href={searchFindingsUrl}>
-                            Findings
+                        <Button bsStyle="link" target="_blank" href={searchFindingsHref}>
+                            Findings ({control.findingsCount})
                         </Button>
                     </div>
 
