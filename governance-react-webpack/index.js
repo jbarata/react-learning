@@ -6,18 +6,18 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 
-import { Sparklines, SparklinesLine } from 'react-sparklines';
-
 import {
-    Button,
     Grid, Row, Col,
-    PanelGroup, Panel,
-    Well,
-    Alert
+    Well
 } from 'react-bootstrap'
 
+import MainTitle from './components/main-title';
+import Goals from './components/goals';
+import GoalDetails from './components/goal-details';
+import GoalControls from './components/goal-controls';
 
-var GovernanceDashboard = React.createClass({
+
+const GovernanceDashboard = React.createClass({
     getInitialState: function() {
         return {
             currentLevel:1,

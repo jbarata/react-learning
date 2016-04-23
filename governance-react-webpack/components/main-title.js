@@ -1,23 +1,18 @@
 //DEV deps
-//var marked = require('marked');
 //import $ from "jquery";
 //DEV deps
 
-var React = require('react');
-var ReactDOM = require('react-dom');
+import React from 'react';
+import ReactDOM  from 'react-dom';
 
 import { Sparklines, SparklinesLine } from 'react-sparklines';
 
 import {
-    Button,
-    Grid, Row, Col,
-    PanelGroup, Panel,
-    Well,
-    Alert
+    Button
 } from 'react-bootstrap'
 
 
-var MainTitle = React.createClass({
+const MainTitle = React.createClass({
     loadTotals: function(headerlevel, goalId, onSucess){
         var _this = this;
         //NOTA: query base construidaa partir de uma query kibana tipo:
@@ -141,3 +136,6 @@ var MainTitle = React.createClass({
         );
     }
 });
+
+
+export default MainTitle;

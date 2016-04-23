@@ -1,23 +1,14 @@
 //DEV deps
 //var marked = require('marked');
-//import $ from "jquery";
 //DEV deps
 
-var React = require('react');
-var ReactDOM = require('react-dom');
+import React from 'react';
+import ReactDOM  from 'react-dom';
 
-import { Sparklines, SparklinesLine } from 'react-sparklines';
-
-import {
-    Button,
-    Grid, Row, Col,
-    PanelGroup, Panel,
-    Well,
-    Alert
-} from 'react-bootstrap'
+import {Alert} from 'react-bootstrap'
 
 
-var GoalDetails = React.createClass({
+const GoalDetails = React.createClass({
     getMarkup: function(text) {
         var rawMarkup = marked(text.toString(), {sanitize: true});
         return { __html: rawMarkup };
@@ -40,3 +31,5 @@ var GoalDetails = React.createClass({
         );
     }
 });
+
+export default GoalDetails;

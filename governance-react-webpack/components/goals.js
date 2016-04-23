@@ -1,24 +1,21 @@
 //DEV deps
-//var marked = require('marked');
 //import $ from "jquery";
 //DEV deps
 
-var React = require('react');
-var ReactDOM = require('react-dom');
+import React from 'react';
+import ReactDOM  from 'react-dom';
 
 import { Sparklines, SparklinesLine } from 'react-sparklines';
 
 import {
     Button,
-    Grid, Row, Col,
     PanelGroup, Panel,
-    Well,
-    Alert
+    Well
 } from 'react-bootstrap'
 
 
 
-var Goals = React.createClass({
+const Goals = React.createClass({
     loadGoals: function(level, parentGoalId, sortBy, sortAsc){
         var _this = this;
         var query = "nível.raw:" + level;
@@ -292,3 +289,6 @@ var Goals = React.createClass({
         );
     }
 });
+
+
+export default Goals;

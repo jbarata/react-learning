@@ -1,24 +1,21 @@
 //DEV deps
-//var marked = require('marked');
 //import $ from "jquery";
 //DEV deps
 
-var React = require('react');
-var ReactDOM = require('react-dom');
+import React from 'react';
+import ReactDOM  from 'react-dom';
 
 import { Sparklines, SparklinesLine } from 'react-sparklines';
 
 import {
     Button,
-    Grid, Row, Col,
     PanelGroup, Panel,
-    Well,
-    Alert
+    Well
 } from 'react-bootstrap'
 
 
 
-var GoalControls = React.createClass({
+const GoalControls = React.createClass({
 
     loadControls: function(goalId, sortBy, sortAsc){
         var _this = this;
@@ -266,12 +263,4 @@ var GoalControls = React.createClass({
 
 });
 
-
-
-/**************** Main stuff ******************/
-var stateHistory=[]; //array to hold the dashboard states as we navigate so we can easaly go back
-
-ReactDOM.render(
-    <GovernanceDashboard stateHistory={stateHistory} />
-    , document.getElementById('governance-dashboard-container')
-);
+export default GoalControls;
