@@ -206,8 +206,8 @@ const Goals = React.createClass({
         };
     },
     componentDidMount: function() {
-        this.loadGoals(this.props.level, this.props.parentGoalId);
-        //this.loadGoalsFromFile(this.props.level, this.props.parentGoalId);
+        //this.loadGoals(this.props.level, this.props.parentGoalId);
+        this.loadGoalsFromFile(this.props.level, this.props.parentGoalId);
         this.buildCreateGoalUrl();
     },
     goLevelClick:function(goal){
