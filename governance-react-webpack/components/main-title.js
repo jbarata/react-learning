@@ -1,7 +1,3 @@
-//DEV deps
-//import $ from "jquery";
-//DEV deps
-
 import React from 'react';
 import ReactDOM  from 'react-dom';
 

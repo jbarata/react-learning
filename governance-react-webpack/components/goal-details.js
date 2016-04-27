@@ -1,7 +1,3 @@
-//DEV deps
-//var marked = require('marked');
-//DEV deps
-
 import React from 'react';
 import ReactDOM  from 'react-dom';
 
