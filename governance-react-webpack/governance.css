@@ -11,3 +11,25 @@ body{
         margin:0;
     }
 }
+
+
+
+
+
+
+/*Evolution data Bar*/
+.evolution-bar > .evolution-data-total{
+    width:60px;
+    font-weight:bold;
+    font-size: 1.4em;
+}
+
+.evolution-bar > .evolution-data-delta{
+    width:30px;
+    font-size: 0.8em;
+}
+
+.evolution-bar > .evolution-data-weight{
+    width:50px;
+    font-size: 0.8em;
+}
