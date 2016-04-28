@@ -33,3 +33,7 @@ body{
     width:50px;
     font-size: 0.8em;
 }
+
+.evolution-bar > .negative-delta{
+    color: red;
+}

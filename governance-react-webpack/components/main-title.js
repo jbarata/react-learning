@@ -3,10 +3,9 @@ import ReactDOM  from 'react-dom';
 
 import { Sparklines, SparklinesLine } from 'react-sparklines';
 
-import {
-    Button
-} from 'react-bootstrap'
+import { Button } from 'react-bootstrap';
 
+import EvolutionBar from './evolution-bar';
 
 const MainTitle = React.createClass({
     loadTotals: function(headerlevel, goalId, onSucess){
@@ -95,13 +94,17 @@ const MainTitle = React.createClass({
                 headerSparklineData: sparklineData
             });
         })
-
+        this.setState({
+            headerSparklineData: [1,2,3,4,3,3]
+        });
     },
 
     render: function() {
         var title = "Governance";
         var showDetailsBtn;
         var backBtn;
+
+
 
         if(this.props.currentLevel > 1 && this.props.currentLevel < 5){
             title = this.props.currentGoal.nome;
@@ -116,6 +119,7 @@ const MainTitle = React.createClass({
                        </Button>);
         }
 
+
         return(
             <div>
                 <h1 style={{"display": "inline-block", "max-width":"70%"}} >{backBtn}{title}</h1>
@@ -127,6 +131,10 @@ const MainTitle = React.createClass({
                     </Sparklines>
                     <h1 style={{"display": "inline-block", "vertical-align": "top"}}>{this.state.headerTotal}%</h1>
 
+                    <EvolutionBar sparklineData={this.state.headerSparklineData}
+                                  sparklineLimit={15}
+                                  sparklineWitdh={150}
+                                  sparklineHeight={35}/>
                 </div>
             </div>
         );
