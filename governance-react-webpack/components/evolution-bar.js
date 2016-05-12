@@ -32,23 +32,26 @@ const EvolutionBar = React.createClass({
 
     },
     render: function() {
-        var total = this.calculateTotal(this.props.sparklineData);
-        var delta = this.calculateDelta(this.props.sparklineData);
+        var total = this.calculateTotal(this.props.sparklineData || []);
+        var delta = this.calculateDelta(this.props.sparklineData || []);
 
         var deltaHtml =(<span>(=)</span>);
         if(delta < 0){
-            deltaHtml = (<span className="negative-delta" style={{"color":"red"}}>{delta}</span>);
+            deltaHtml = (<span className="negative-delta">{delta}</span>);
         }else if (delta > 0){
             deltaHtml = (<span>+{delta}</span>);
         }
 
         var weightHtml;
-        if(this.props.weight != undefined){
-            weightHtml =(<td className="evolution-data-weight" style={{"width":"50px","font-size": "0.8em"}}>Peso:{this.props.weight}</td>)
+        if(this.props.weight!= undefined){
+            weightHtml =(<span><br/> Peso:{this.props.weight}</span>)
         }
 
+        var mainClassname = this.props.size ? "evolution-bar-" + this.props.size
+                                            : "evolution-bar"
+
         return(
-            <div className="evolution-bar">
+            <div className={mainClassname}>
 
                 <Sparklines data={this.props.sparklineData}
                             limit={this.props.sparklineLimit || 10}
@@ -61,9 +64,12 @@ const EvolutionBar = React.createClass({
                 <table style={{"display":"inline"}}>
                     <tbody>
                         <tr>
-                            <td className="evolution-data-total"><span style={{"font-weight":"bold","font-size": "1.4em"}}>{total}%</span></td>
-                            <td className="evolution-data-delta">{deltaHtml}</td>
-                            {weightHtml}
+                            <td className="evolution-data-total">{total}%</td>
+                            <td className="evolution-data-delta">
+                                {deltaHtml}
+                                {weightHtml}
+                            </td>
+
                         </tr>
                     </tbody>
                 </table>

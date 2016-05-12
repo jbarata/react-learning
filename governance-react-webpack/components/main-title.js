@@ -40,8 +40,6 @@ const MainTitle = React.createClass({
           cache: false,
           success: function(json) {
               var sparklineData = [];
-              var lastTotal;
-              var lastDelta;
 
               //NOTA IMPORTANTE: segundo o mimes é possivel que as 2 keys seguintes mudem caso a query seja alterada (com mais aggs ou assim)
               var aggregationsKey  = "2";
@@ -54,28 +52,12 @@ const MainTitle = React.createClass({
                   if(value!=null) sparklineData.push(value)
               });
 
-              var dataLength = sparklineData.length;
-
-              if(dataLength == 0){
-                  lastTotal = 0;
-                  lastDelta = 0;
-              }else if(dataLength == 1){
-                  lastTotal =  sparklineData[0].toFixed(1);
-                  lastDelta = lastTotal;
-              }else{
-                  lastTotal =  sparklineData[dataLength-1].toFixed(1);
-                  lastDelta =  (lastTotal - sparklineData[dataLength-2]).toFixed(1);
-
-              }
-
-              onSucess(lastTotal, lastDelta, sparklineData);
+              onSucess(sparklineData);
           }
         });
     },
     getInitialState: function() {
         return {
-            headerTotal: undefined,
-            headerDelta: undefined,
             headerSparklineData:[]
         };
     },
@@ -86,21 +68,23 @@ const MainTitle = React.createClass({
 
         if(this.props.currentGoal) goalId = this.props.currentGoal.id;
 
-        this.loadTotals(headerlevel, goalId, function(total, delta, sparklineData){
+        this.loadTotals(headerlevel, goalId, function(sparklineData){
 
             _this.setState({
-                headerTotal: total,
-                headerDelta: delta,
                 headerSparklineData: sparklineData
             });
         })
+
+//TODO JB em testes
         this.setState({
-            headerSparklineData: [1,2,3,4,3,3]
+            //headerSparklineData: [6,2,3,4,5,6,7,8,9,4,3,3]
         });
+
     },
 
     render: function() {
         var title = "Governance";
+        var peso;
         var showDetailsBtn;
         var backBtn;
 
@@ -108,6 +92,8 @@ const MainTitle = React.createClass({
 
         if(this.props.currentLevel > 1 && this.props.currentLevel < 5){
             title = this.props.currentGoal.nome;
+            peso = this.props.currentGoal.peso;
+
             showDetailsBtn = (<Button bsStyle="link" onClick={this.props.onShowGoalDetails}>
                                     <i className="icon-question-sign" style={{"vertical-align": "middle"}}></i>
                              </Button>);
@@ -126,15 +112,12 @@ const MainTitle = React.createClass({
                 {showDetailsBtn}
 
                 <div style={{"float": "right"}} >
-                    <Sparklines data={this.state.headerSparklineData} limit={15} width={150} height={35} margin={5} style={{"margin-top":"13px"}}>
-                      <SparklinesLine />
-                    </Sparklines>
-                    <h1 style={{"display": "inline-block", "vertical-align": "top"}}>{this.state.headerTotal}%</h1>
-
                     <EvolutionBar sparklineData={this.state.headerSparklineData}
-                                  sparklineLimit={15}
+                                  sparklineLimit={10}
                                   sparklineWitdh={150}
-                                  sparklineHeight={35}/>
+                                  sparklineHeight={35}
+                                  weight={peso}
+                                  size="big"/>
                 </div>
             </div>
         );

@@ -17,6 +17,9 @@ import GoalDetails from './components/goal-details';
 import GoalControls from './components/goal-controls';
 
 
+var DoughnutChart = require("react-chartjs").Doughnut;
+var Chart = require('chart.js')
+
 const GovernanceDashboard = React.createClass({
     getInitialState: function() {
         return {
@@ -81,9 +84,49 @@ const GovernanceDashboard = React.createClass({
                                         onGoToLevel={this.handleGoToControlLevel}/> );
         }
 
+        var data = {
+            labels: [
+                "Total"
+            ],
+            datasets: [
+                {
+                    data: [80, 20],
+                    backgroundColor: [
+                        "grey",
+                        "white"
+                    ]
+                }]
+        };
+          var chartOptions={
+              cutoutPercentage:70,
+              animation:{
+                  onComplete : function(){
+
+                      var width = this.chart.width,
+                          height = this.chart.height;
+
+                      var fontSize = (height / 114).toFixed(2);
+                      this.chart.ctx.font = fontSize + "em Verdana";
+                      this.chart.ctx.textBaseline = "middle";
+                      var text = "82%",
+                          textX = Math.round((width - this.chart.ctx.measureText(text).width) / 2),
+                          textY = height / 2;
+
+                      this.chart.ctx.fillText(text, textX, textY);
+                  }
+              }
+          };
+          Chart.defaults.global.legend.display=false;
+
+
+
         return (
 
                 <Well bsSize="large" className="governance-inner-container" >
+
+
+<DoughnutChart data={data} options={chartOptions}/>
+
                   <Grid key={this.state.currentLevel}>
                       <Row style={{"margin-bottom":"20px"}}>
                         <Col md={12} lg={12}>
@@ -119,6 +162,11 @@ const GovernanceDashboard = React.createClass({
                           </Col>
                       </Row>
                   </Grid>
+
+
+
+
+
 
               </Well>
 

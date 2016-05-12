@@ -9,7 +9,7 @@ import {
     Well
 } from 'react-bootstrap'
 
-
+import EvolutionBar from './evolution-bar';
 
 const GoalControls = React.createClass({
 
@@ -32,12 +32,7 @@ const GoalControls = React.createClass({
               json.hits.hits.forEach(function(hit){
                   var control = hit._source;
 
-                  //TODO JBARATA hack temporario para por o total de cada control
-                  //control.total = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
-                  //control.delta = Math.floor(Math.random() * 200) -100 ; //TODO JBARATA implementar
-
                   controls.push(control);
-
               });
 
               window.console.log(controls);
@@ -45,9 +40,7 @@ const GoalControls = React.createClass({
               _this.setState({controls: controls}); // render controls right away
 
               controls.forEach(function(control){
-                  _this.loadControlTotals(control.id, function(total, delta, sparklineData){
-                      control.total = total;
-                      control.delta = delta;
+                  _this.loadControlTotals(control.id, function(sparklineData){
                       control.sparklineData = sparklineData;
 
                       _this.setState({controls: controls}); // render controls totals as they arrive
@@ -88,8 +81,6 @@ const GoalControls = React.createClass({
           cache: false,
           success: function(json) {
               var sparklineData = [];
-              var lastTotal;
-              var lastDelta;
 
               //NOTA IMPORTANTE: segundo o mimes é possivel que as 2 keys seguintes mudem caso a query seja alterada (com mais aggs ou assim)
               var aggregationsKey  = "2";
@@ -102,21 +93,7 @@ const GoalControls = React.createClass({
                   if(value!=null) sparklineData.push(value)
               });
 
-              var dataLength = sparklineData.length;
-
-              if(dataLength == 0){
-                  lastTotal = 0;
-                  lastDelta = 0;
-              }else if(dataLength == 1){
-                  lastTotal = sparklineData[0].toFixed(1);
-                  lastDelta = lastTotal;
-              }else{
-                  lastTotal = sparklineData[dataLength-1].toFixed(1);
-                  lastDelta = (lastTotal - sparklineData[dataLength-2]).toFixed(1);
-
-              }
-
-              onSucess(lastTotal, lastDelta, sparklineData);
+              onSucess(sparklineData);
           }
         });
     },
@@ -194,12 +171,6 @@ const GoalControls = React.createClass({
         var emptyRow;
 
         this.state.controls.forEach(function(control) {
-            var delta =(<span>(=)</span>);
-            if(control.delta < 0){
-                delta = (<span style={{"color":"red"}}>{control.delta}</span>);
-            }else if (control.delta > 0){
-                delta = (<span>+{control.delta}</span>);
-            }
 
             var viewControlHref = "/recordm/index.html#/instance/" + control.id;
             var searchAssessmentsHref = "/recordm/index.html#/definitions/111/q=" + encodeURIComponent("id_control.raw:" + control.id);
@@ -224,21 +195,8 @@ const GoalControls = React.createClass({
                     </div>
 
                     <div style={{"float": "right"}} >
-
-                        <Sparklines data={control.sparklineData} limit={10} width={100} height={20} margin={5}>
-                            <SparklinesLine />
-                        </Sparklines>
-
-                        <table style={{"display":"inline"}}>
-                            <tbody>
-                                <tr>
-                                    <td style={{"width":"60px"}}><span style={{"font-weight":"bold","font-size": "1.4em"}}>{control.total}%</span></td>
-                                    <td style={{"width":"30px","font-size": "0.8em"}}>{delta}</td>
-                                    <td style={{"width":"50px","font-size": "0.8em"}}>Peso:{control.peso}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
+                        <EvolutionBar sparklineData={control.sparklineData}
+                                      weight={control.peso}/>
                     </div>
 
                 </Panel>

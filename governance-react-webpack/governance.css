@@ -16,24 +16,35 @@ body{
 
 
 
-
+/********************/
 /*Evolution data Bar*/
-.evolution-bar > .evolution-data-total{
+/********************/
+
+/*default size*/
+.evolution-bar .evolution-data-total{
     width:60px;
     font-weight:bold;
-    font-size: 1.4em;
+    font-size: 1.6em;
 }
 
-.evolution-bar > .evolution-data-delta{
-    width:30px;
-    font-size: 0.8em;
-}
-
-.evolution-bar > .evolution-data-weight{
+.evolution-bar .evolution-data-delta{
     width:50px;
     font-size: 0.8em;
 }
 
-.evolution-bar > .negative-delta{
+
+.evolution-data-delta .negative-delta{
     color: red;
+}
+
+/*big size*/
+.evolution-bar-big .evolution-data-total{
+    width:60px;
+    font-weight:bold;
+    font-size: 2.4em;
+}
+
+.evolution-bar-big .evolution-data-delta{
+    width:50px;
+    font-size: 1em;
 }

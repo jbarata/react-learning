@@ -9,7 +9,7 @@ import {
     Well
 } from 'react-bootstrap'
 
-
+import EvolutionBar from './evolution-bar';
 
 const Goals = React.createClass({
     loadGoals: function(level, parentGoalId, sortBy, sortAsc){
@@ -38,12 +38,7 @@ const Goals = React.createClass({
               json.hits.hits.forEach(function(hit){
                   var goal = hit._source;
 
-                  //TODO JBARATA hack temporario para por o total
-                 // goal.total = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
-                 // goal.delta = Math.floor(Math.random() * 200) -100 ; //TODO JBARATA implementar
-
                   goals.push(goal);
-
               });
 
               window.console.log(goals);
@@ -51,9 +46,7 @@ const Goals = React.createClass({
               _this.setState({goals: goals}); // render goals right away
 
               goals.forEach(function(goal){
-                  _this.loadTotals(level, goal.id, function(total, delta, sparklineData){
-                      goal.total = total;
-                      goal.delta = delta;
+                  _this.loadTotals(level, goal.id, function(sparklineData){
                       goal.sparklineData = sparklineData;
 
                       _this.setState({goals: goals}); // render goal totals as they arrive
@@ -82,8 +75,6 @@ const Goals = React.createClass({
           cache: false,
           success: function(json) {
               var sparklineData = [];
-              var lastTotal;
-              var lastDelta;
 
               //NOTA IMPORTANTE: segundo o mimes é possivel que as 2 keys seguintes mudem caso a query seja alterada (com mais aggs ou assim)
               var aggregationsKey  = "2";
@@ -96,21 +87,7 @@ const Goals = React.createClass({
                   if(value!=null) sparklineData.push(value)
               });
 
-              var dataLength = sparklineData.length;
-
-              if(dataLength == 0){
-                  lastTotal = 0;
-                  lastDelta = 0;
-              }else if(dataLength == 1){
-                  lastTotal =  sparklineData[0].toFixed(1);
-                  lastDelta =  lastTotal;
-              }else{
-                  lastTotal =  sparklineData[dataLength-1].toFixed(1);
-                  lastDelta =  (lastTotal - sparklineData[dataLength-2]).toFixed(1);
-
-              }
-
-              onSucess(lastTotal, lastDelta, sparklineData);
+              onSucess(sparklineData);
           }
         });
     },
@@ -124,10 +101,6 @@ const Goals = React.createClass({
             var goals = [];
             json.hits.hits.forEach(function(hit){
                 var goal = hit._source;
-
-                //TODO JBARATA hack temporario para por o total
-                //goal.total = Math.floor(Math.random() * 100) + 1; //TODO JBARATA implementar
-            //    goal.delta = Math.floor(Math.random() * 200) -100 ; //TODO JBARATA implementar
 
                 if(parseInt(goal["nível"],10) == level){
                     if(level == 1 ||
@@ -145,9 +118,7 @@ const Goals = React.createClass({
             _this.setState({goals: goals}); // render goals right away
 
             goals.forEach(function(goal){
-                _this.loadTotalsFromFile(level, goal.id, function(total, delta, sparklineData){
-                    goal.total = total;
-                    goal.delta = delta;
+                _this.loadTotalsFromFile(level, goal.id, function(sparklineData){
                     goal.sparklineData = sparklineData;
 
                     _this.setState({goals: goals}); // render goal totals as they arrive
@@ -166,8 +137,6 @@ const Goals = React.createClass({
 
         $.getJSON("aggs-query-result.json", function(json) {
             var sparklineData = [];
-            var lastTotal;
-            var lastDelta;
 
             //NOTA IMPORTANTE: segundo o mimes é possivel que as 2 keys seguintes mudem caso a query seja alterada (com mais aggs ou assim)
             var aggregationsKey  = "2";
@@ -180,21 +149,10 @@ const Goals = React.createClass({
                 if(value!=null) sparklineData.push(value)
             });
 
-            var dataLength = sparklineData.length;
+            //JB mais facil martelar os dados para testes.....
+            sparklineData= [6,2,3,4,5,6,7,8,9,4,3,3]
 
-            if(dataLength == 0){
-                lastTotal = 0;
-                lastDelta = 0;
-            }else if(dataLength == 1){
-                lastTotal = sparklineData[0].toFixed(1);
-                lastDelta = lastTotal;
-            }else{
-                lastTotal = sparklineData[dataLength-1].toFixed(1);
-                lastDelta = (lastTotal - sparklineData[dataLength-2]).toFixed(1);
-
-            }
-
-            onSucess(lastTotal, lastDelta, sparklineData);
+            onSucess(sparklineData);
 
         });
 
@@ -207,7 +165,7 @@ const Goals = React.createClass({
     },
     componentDidMount: function() {
         //this.loadGoals(this.props.level, this.props.parentGoalId);
-        this.loadGoalsFromFile(this.props.level, this.props.parentGoalId);
+        //this.loadGoalsFromFile(this.props.level, this.props.parentGoalId);
         this.buildCreateGoalUrl();
     },
     goLevelClick:function(goal){
@@ -231,36 +189,17 @@ const Goals = React.createClass({
         var emptyRow;
 
         this.state.goals.forEach(function(goal) {
-            var delta =(<span>(=)</span>);
-            if(goal.delta < 0){
-                delta = (<span style={{"color":"red"}}>{goal.delta}</span>);
-            }else if (goal.delta > 0){
-                delta = (<span>+{goal.delta}</span>);
-            }
 
             rows.push(
-                <Panel  key={goal.id}>
+                <Panel key={goal.id}>
                     <Button bsStyle="link" bsSize="large" style={{"font-size":"1.2em"}}
                             onClick={ () => _this.goLevelClick(goal) }>
                         {goal.nome}
                     </Button>
 
                     <div style={{"float": "right"}} >
-
-                        <Sparklines data={goal.sparklineData} limit={10} width={100} height={20} margin={5}>
-                            <SparklinesLine />
-                        </Sparklines>
-
-                        <table style={{"display":"inline"}}>
-                            <tbody>
-                                <tr>
-                                    <td style={{"width":"60px"}}><span style={{"font-weight":"bold","font-size": "1.4em"}}>{goal.total}%</span></td>
-                                    <td style={{"width":"30px","font-size": "0.8em"}}>{delta}</td>
-                                    <td style={{"width":"50px","font-size": "0.8em"}}>Peso:{goal.peso}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
+                        <EvolutionBar sparklineData={goal.sparklineData}
+                                      weight={goal.peso}/>
                     </div>
 
                 </Panel>
