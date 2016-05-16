@@ -17,8 +17,10 @@ import GoalDetails from './components/goal-details';
 import GoalControls from './components/goal-controls';
 
 
-var DoughnutChart = require("react-chartjs").Doughnut;
-var Chart = require('chart.js')
+//var DoughnutChart = require("react-chartjs").Doughnut;
+//var Chart = require('chart.js')
+
+import DonutChart from './components/donut-chart';
 
 const GovernanceDashboard = React.createClass({
     getInitialState: function() {
@@ -26,7 +28,14 @@ const GovernanceDashboard = React.createClass({
             currentLevel:1,
             parentGoalId: undefined,
             currentGoal:undefined,
-            showGoalDetails:false
+            showGoalDetails:false,
+
+
+              total: 100,
+              series: [
+                { label: '80%', value: '', data: 80, selected: true}
+              ]
+
         };
     },
     handleGoToLevel: function(level, parentGoal){
@@ -84,6 +93,7 @@ const GovernanceDashboard = React.createClass({
                                         onGoToLevel={this.handleGoToControlLevel}/> );
         }
 
+/*
         var data = {
             labels: [
                 "Total"
@@ -97,6 +107,9 @@ const GovernanceDashboard = React.createClass({
                     ]
                 }]
         };
+
+        Chart.defaults.global.legend.display=false;
+
           var chartOptions={
               cutoutPercentage:70,
               animation:{
@@ -106,7 +119,7 @@ const GovernanceDashboard = React.createClass({
                           height = this.chart.height;
 
                       var fontSize = (height / 114).toFixed(2);
-                      this.chart.ctx.font = fontSize + "em Verdana";
+                      this.chart.ctx.font = "3em Verdana";
                       this.chart.ctx.textBaseline = "middle";
                       var text = "82%",
                           textX = Math.round((width - this.chart.ctx.measureText(text).width) / 2),
@@ -116,8 +129,9 @@ const GovernanceDashboard = React.createClass({
                   }
               }
           };
-          Chart.defaults.global.legend.display=false;
 
+
+*/
 
 
         return (
@@ -125,7 +139,8 @@ const GovernanceDashboard = React.createClass({
                 <Well bsSize="large" className="governance-inner-container" >
 
 
-<DoughnutChart data={data} options={chartOptions}/>
+{/*<DoughnutChart data={data} options={chartOptions}/>*/}
+<DonutChart {...this.state}  />
 
                   <Grid key={this.state.currentLevel}>
                       <Row style={{"margin-bottom":"20px"}}>
@@ -163,16 +178,19 @@ const GovernanceDashboard = React.createClass({
                       </Row>
                   </Grid>
 
-
-
-
-
-
               </Well>
 
         );
     }
 });
+
+
+
+
+
+
+
+
 
 
 /**************** Main stuff ******************/
