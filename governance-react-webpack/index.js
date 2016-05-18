@@ -9,7 +9,19 @@ var ReactDOM = require('react-dom');
 import {
     Grid, Row, Col,
     Well
-} from 'react-bootstrap'
+} from 'react-bootstrap';
+
+
+
+
+
+    import {Form,ControlLabel,
+        FormGroup,
+        FormControl,
+        Checkbox,
+        Button
+    } from 'react-bootstrap';
+
 
 import MainTitle from './components/main-title';
 import Goals from './components/goals';
@@ -17,10 +29,7 @@ import GoalDetails from './components/goal-details';
 import GoalControls from './components/goal-controls';
 
 
-//var DoughnutChart = require("react-chartjs").Doughnut;
-//var Chart = require('chart.js')
-
-import DonutChart from './components/donut-chart';
+import SingleValueDonutChart from './components/single-value-donut-chart';
 
 const GovernanceDashboard = React.createClass({
     getInitialState: function() {
@@ -28,14 +37,7 @@ const GovernanceDashboard = React.createClass({
             currentLevel:1,
             parentGoalId: undefined,
             currentGoal:undefined,
-            showGoalDetails:false,
-
-
-              total: 100,
-              series: [
-                { label: '80%', value: '', data: 80, selected: true}
-              ]
-
+            showGoalDetails:false
         };
     },
     handleGoToLevel: function(level, parentGoal){
@@ -93,54 +95,42 @@ const GovernanceDashboard = React.createClass({
                                         onGoToLevel={this.handleGoToControlLevel}/> );
         }
 
-/*
-        var data = {
-            labels: [
-                "Total"
-            ],
-            datasets: [
-                {
-                    data: [80, 20],
-                    backgroundColor: [
-                        "grey",
-                        "white"
-                    ]
-                }]
-        };
-
-        Chart.defaults.global.legend.display=false;
-
-          var chartOptions={
-              cutoutPercentage:70,
-              animation:{
-                  onComplete : function(){
-
-                      var width = this.chart.width,
-                          height = this.chart.height;
-
-                      var fontSize = (height / 114).toFixed(2);
-                      this.chart.ctx.font = "3em Verdana";
-                      this.chart.ctx.textBaseline = "middle";
-                      var text = "82%",
-                          textX = Math.round((width - this.chart.ctx.measureText(text).width) / 2),
-                          textY = height / 2;
-
-                      this.chart.ctx.fillText(text, textX, textY);
-                  }
-              }
-          };
 
 
-*/
+        const formInstance = (
+<Well>
+    <h4>Cenas    açlsDK çasldfk çdlskf s dafsdf</h4>
+    <br/>
+    <form >
+        <FormGroup>
+          <ControlLabel>Text</ControlLabel> &nbsp;
+          <FormControl type="text" placeholder="Enter text" style={{"width":"100px","height":"30px"}} />
+          <br/>
+          <ControlLabel>Observações</ControlLabel> &nbsp;
+          <FormControl type="text" placeholder="Enter text" style={{"height":"30px"}} />
+        </FormGroup>
+
+        <FormGroup>
+             <Button type="submit">
+              Sign in
+            </Button>
+        </FormGroup>
+</form>
+</Well>
+        );
 
 
         return (
 
                 <Well bsSize="large" className="governance-inner-container" >
 
+{formInstance}
 
-{/*<DoughnutChart data={data} options={chartOptions}/>*/}
-<DonutChart {...this.state}  />
+
+
+<div>
+    <SingleValueDonutChart  value={5}  />
+</div>
 
                   <Grid key={this.state.currentLevel}>
                       <Row style={{"margin-bottom":"20px"}}>
